@@ -204,7 +204,12 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-html, body { min-height:100vh; color:var(--text); font-family:'Outfit',sans-serif; overflow-x:hidden; }
+html, body { 
+    min-height: 100vh; 
+    color: var(--text); 
+    font-family: 'Outfit', sans-serif; 
+    overflow-x: hidden; 
+}
 
 /* ══════════════════════════════════════════════════
    WELCOME SCREEN (HOŞGELDİN EKRANI) CSS
@@ -294,7 +299,7 @@ html, body { min-height:100vh; color:var(--text); font-family:'Outfit',sans-seri
 /* ARKA PLAN BURAYA EKLENDİ - TERTEMİZ VE SORUNSUZ */
 body {
     min-height: 100vh;
-    background: #e6e6e6 !important; /* Arka planı doğrudan mat açık gri yapar */
+    background: #797979 !important; /* Arka planı mat orta gri tonuna çeker */
     color: var(--text);
     font-family: 'Outfit', sans-serif;
     overflow-x: hidden;
@@ -302,7 +307,7 @@ body {
 
 /* YAZILARIN DAHA İYİ OKUNMASI İÇİN ÇOK HAFİF BİR KARARTMA */
 .page-overlay { 
-    display: none; /* Katmanı tamamen devre dışı bırakır, griniz tertemiz görünür */
+    display: none; /* Katmanı tamamen devre dışı bırakır */
 }
 
 /* SİLİNEN VE DÜZENİ BOZAN İSKELET KODLARI GERİ GELDİ */
