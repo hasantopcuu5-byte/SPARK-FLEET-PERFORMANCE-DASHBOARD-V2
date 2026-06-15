@@ -86,7 +86,7 @@ function navSwitch(page){
     else if(page === 'pscIstat'){
       if(pscIstat) { pscIstat.style.display = 'block'; renderPscIstatView(); }
     }
-    else if(page === 'superintendent'){
+   else if(page === 'superintendent'){
       if(supt) {
         supt.style.display = 'block';
         // İlk açılışta Firebase'den yükle, sonraki geçişlerde sadece yeniden çiz
@@ -94,11 +94,14 @@ function navSwitch(page){
           if(!window._suptInitialized) {
             window._suptInitialized = true;
             initSuperintendent();
-          } else {
-            suptRenderCurrentTab();
           }
         }
+        // KESİN ÇÖZÜM: Sidebardan basıldığı an "Genel Özet" alt sekmesini zorla tetikler
+        if(typeof suptTabSwitch === 'function') {
+          suptTabSwitch('p-toplam');
+        }
       }
+    }
     }
   }
 
