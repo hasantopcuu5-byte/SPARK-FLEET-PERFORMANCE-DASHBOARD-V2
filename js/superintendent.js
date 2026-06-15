@@ -342,7 +342,8 @@ function suptRenderCalisan() {
 
 function suptRenderBulk() {
   const allEntries = suptGetAllEntries();
-  const allMonths = [...new Set(allEntries.map(e => e.monthKey))].sort();
+  // KESİN ÇÖZÜM: Dinamik takvim zincirini diğer sekmelerle eşitliyoruz
+  const allMonths = suptGetExtendedMonthKeys(allEntries);
   const allShips  = suptGetAllShips();
 
   let thHtml = '<th style="text-align:left;padding:10px;background:rgba(10, 22, 26, 0.95);color:var(--muted);position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.25);z-index:3;">GEMİ</th>';
@@ -351,7 +352,7 @@ function suptRenderBulk() {
   });
 
   // Üst taraftaki "Ofiste Kalan" satırı
-  const totalInspectors = getAllNames().length;
+  const totalInspectors = typeof getAllNames === 'function' ? getAllNames().length : 3; // Güvenli fallback
   let tbodyHtml = `<tr style="background:rgba(0,216,200,0.03); border-bottom:1px solid rgba(0,216,200,0.15);">
     <td style="position:sticky; left:0; background:rgba(14,32,36,0.95); color:var(--warn); font-weight:700; text-align:left; z-index:2; border-right:1px solid rgba(0,216,200,0.15);">OFİSTE KALAN ENSPEKTÖR SAYISI</td>`;
   allMonths.forEach(mk => {
@@ -368,7 +369,7 @@ function suptRenderBulk() {
   });
   tbodyHtml += '</tr>';
 
-  // Gemi satırları (Orijinal tasarımdaki gibi HSEQ, OP, TEK şeklinde departman rozetleriyle)
+  // Gemi satırları
   allShips.forEach(ship => {
     let row = `<td style="padding:7px 10px;font-weight:700;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:2;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05); text-align:left;">${ship}</td>`;
     allMonths.forEach(mk => {
@@ -381,7 +382,6 @@ function suptRenderBulk() {
             const label = dept.toUpperCase();
             const col = SUPT_DEPT_COLOR[dept];
             const bg  = SUPT_DEPT_BG[dept];
-            // Orijinal tasarımdaki kutucuklar (Açık renkli / yüksek kontrastlı metin ile)
             chips += `<span class="xm" style="display:inline-block; background:${bg}; color:${col}; border:1px solid ${col}; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:800; margin:2px; letter-spacing:0.5px;">${label}</span>`;
         }
       });
