@@ -290,8 +290,23 @@ html, body { min-height:100vh; background:var(--bg); color:var(--text); font-fam
 /* ══════════════════════════════════════════════════
    ANA DASHBOARD CSS
 ══════════════════════════════════════════════════ */
-#kineticCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
-.page-overlay { position:fixed; inset:0; z-index:1; pointer-events:none; background: radial-gradient(ellipse 90% 70% at 50% 50%, rgba(14,31,34,0.5) 0%, rgba(14,31,34,0.88) 100%); }
+/* YENİ STATİK ARKA PLAN (Kasma Yapmaz, Şık Görünür) */
+body {
+    background-color: #0b1518; /* Derin lacivert/turkuaz zemin */
+    background-image: 
+        radial-gradient(circle at 80% 20%, rgba(0, 216, 200, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 20% 80%, rgba(212, 160, 48, 0.05) 0%, transparent 40%);
+    background-attachment: fixed;
+}
+
+/* Eski karanlık katmanı hafiflettik */
+.page-overlay { 
+    position: fixed; 
+    inset: 0; 
+    z-index: 1; 
+    pointer-events: none; 
+    background: rgba(10, 22, 26, 0.3); /* Eskiden 0.88 olan koyuluğu 0.3'e çektik */
+}
 .page { position:relative; z-index:2; max-width:1340px; margin:0 auto; padding:2.5rem 2rem 3rem; padding-left:calc(64px + 2.2rem); }
 
 .header-right { display:flex; flex-direction:column; align-items:flex-end; gap:0.8rem; }
