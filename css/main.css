@@ -1498,3 +1498,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* 1. Superintendent Üstündeki 3 Büyük Sayaç Kartının Arka Planı */
+#p-toplam > div:first-child > div {
+    background: var(--glass) !important; /* Diğer sekmelerdeki orijinal koyu lacivert cam tonu */
+    border: 1px solid var(--border2) !important; /* İnce turkuaz çerçeve */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 2. Departman Tablolarının İçindeki Küçük Ziyaret Kutuları */
+#superintendentPanel table td div[style*="position:relative;text-align:left"] {
+    background: rgba(14, 32, 36, 0.95) !important; /* Mat ve okunaklı koyu lacivert */
+    border: 1px solid rgba(0, 216, 200, 0.3) !important; /* Turkuaz sınır çizgisi */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 3. Ziyaret Kutularının İçindeki Başlık ve Yazıların Net Okunması İçin */
+#superintendentPanel table td div[style*="position:relative;text-align:left"] div {
+    color: #ffffff !important; /* İsimleri net beyaz yapar */
+}
