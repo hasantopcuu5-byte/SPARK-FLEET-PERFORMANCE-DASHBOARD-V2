@@ -308,7 +308,7 @@ html, body {
     pointer-events: none; 
     
     /* GÖRSELİN YOLU */
-    background-image: url('../assets/images/arkaplan.jpg'); 
+    background-image: url('../assets/images/yeni-arkaplan.jpg'); 
     
     /* GÖRSELİ EKRANA DÜZGÜN OTURTAN AYARLAR */
     background-size: cover; /* Resmi ezmeden ekrana tam yayar */
