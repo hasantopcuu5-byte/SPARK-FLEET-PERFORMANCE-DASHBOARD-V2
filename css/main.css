@@ -296,40 +296,37 @@ body {
     background-attachment: fixed;
 }
 
-/* 1. RESMİ EKRANA YAYIP BULANIKLAŞTIRAN KISIM */
-body::before {
-    content: "";
-    position: fixed;
-    /* Kenarlardaki saydamlaşmayı engellemek için %5 dışarı taşırıyoruz */
-    top: -5%; left: -5%; right: -5%; bottom: -5%; 
-    z-index: 0; /* En arkada durması için */
-    
-    /* BURAYA KENDİ GÖRSELİNİN ADINI YAZMALISIN */
-    background-image: url('../assets/images/yeni-arkaplan.jpg'); 
-    background-size: cover;
-    background-position: center;
-    
-    /* Bulanıklık derecesi. İstediğin gibi artırıp azaltabilirsin */
-    filter: blur(50px); 
+/* 1. SİLİNEN ORİJİNAL BODY AYARLARINI GERİ GETİRİYORUZ (Düzenin bozulmaması için çok önemli) */
+html, body { 
+    min-height: 100vh; 
+    background: #0b1518; 
+    color: var(--text); 
+    font-family: 'Outfit', sans-serif; 
+    overflow-x: hidden; 
 }
 
-/* 2. EKRANI HAFİF KARARTIP "KUMLANMA/GREN" DOKUSU EKLEYEN KISIM */
+/* 2. ARKA PLAN GÖRSELİNİ BURAYA VERİYORUZ (Z-index hatası olmaması için) */
 .page-overlay { 
     position: fixed; 
     inset: 0; 
-    z-index: 1; /* Arka planın üstünde, menülerin arkasında durur */
+    z-index: 0; /* İçeriklerin arkasında kalmasını garantiler */
     pointer-events: none; 
-    background-color: rgba(10, 22, 26, 0.4); /* Çok hafif bir karanlık katman */
+    
+    /* CSS Blur kullanmıyoruz, resmin kendi kalitesini yansıtıyoruz */
+    background-image: url('../assets/images/arkaplan.jpg'); /* Dosya adının doğruluğuna emin ol */
+    background-size: cover;
+    background-position: center;
 }
 
-/* Kumlanma (Noise) Efekti */
+/* 3. KUMLANMA (NOISE) DOKUSUNU BURADAN ATIYORUZ */
 .page-overlay::after {
     content: "";
     position: absolute;
     inset: 0;
-    /* Yüksek kaliteli, performansı yormayan SVG kumlanma efekti */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.12; /* Kumlanmanın belirginliğini buradan kısıp açabilirsin */
+    /* Performansı yormayan çok şık bir SVG kum efekti */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.15; /* Kumlanma şiddeti (0.10 ile 0.20 arası değiştirebilirsin) */
+    mix-blend-mode: overlay; /* Kumun arkaplan renkleriyle profesyonelce kaynaşmasını sağlar */
 }
 
 /* --- SİBERPUNK YEDEKLEME BUTONU --- */
