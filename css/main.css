@@ -295,7 +295,7 @@ html, body { min-height:100vh; background:var(--bg); color:var(--text); font-fam
 body {
     min-height: 100vh;
     background-color: #0b1518;
-    background-image: url('../assets/images/arkaplan.jpg'); /* RESMİNİN ADIYLA AYNI OLDUĞUNA EMİN OL */
+    background-image: url('../assets/images/yeni-arkaplan.jpg'); /* RESMİNİN ADIYLA AYNI OLDUĞUNA EMİN OL */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
