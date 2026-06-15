@@ -1498,13 +1498,3 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-/* Joker Seçici: Ziyaret özetiyle ilgili olabilecek tüm kart yapılarını hedefler */
-[id*="ziyaret"] .card, [class*="ziyaret"] .card,
-[id*="visit"] .card, [class*="visit"] .card,
-[id*="superintendent"] .card, [class*="superintendent"] .card,
-[id*="supt"] .card, [class*="supt"] .card,
-.visit-card, .summary-card, .supt-card {
-    background-color: #112229 !important; /* Şirket PSC'deki o koyu lacivert ton */
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    color: #ffffff !important;
-}
