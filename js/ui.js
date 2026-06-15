@@ -43,72 +43,7 @@ if (welcomeScreen) {
         }, 200);
     });
 }
-// ══════════════════════════════════════════════════════
-//  KİNETİK RİBBON ANIMASYONU
-// ══════════════════════════════════════════════════════
-const canvas = document.getElementById('kineticCanvas');
-const ctx    = canvas.getContext('2d');
-let W, H;
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-class Ribbon {
-  constructor(cfg) { Object.assign(this, cfg); }
-  draw(t) {
-    const yB = H * this.yBase;
-    for (let li = 0; li < this.layers; li++) {
-      const frac   = li / (this.layers - 1);
-      const spread = (frac - 0.5) * this.thickness;
-      const dist   = Math.abs(frac - 0.5);
-      let   alpha  = (0.5 - dist) * 2 * this.alpha;
-      if (alpha <= 0.01) continue;
-      const isCore = dist < 0.12;
-      const pts =[];
-      const seg = 180;
-      for (let s = 0; s <= seg; s++) {
-        const x = W * s / seg;
-        const y = yB
-          + Math.sin(x * this.freq + this.phase + t * this.speed) * this.amplitude
-          + Math.sin(x * this.freq * 1.9 + this.phase * 0.7 + t * this.speed * 0.55) * this.amplitude * 0.22
-          + spread;
-        pts.push([x, y]);
-      }
-      ctx.beginPath();
-      ctx.moveTo(pts[0][0], pts[0][1]);
-      for (let s = 1; s < pts.length - 1; s++) {
-        const cx = (pts[s][0] + pts[s+1][0]) / 2;
-        const cy = (pts[s][1] + pts[s+1][1]) / 2;
-        ctx.quadraticCurveTo(pts[s][0], pts[s][1], cx, cy);
-      }
-      if (isCore) {
-        ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.85})`; ctx.lineWidth = 1.0;
-      } else {
-        const g = ctx.createLinearGradient(0, 0, W, 0);
-        const a1 = Math.floor(alpha * 255).toString(16).padStart(2,'0');
-        const a0 = '00';
-        g.addColorStop(0, this.c1 + a0); g.addColorStop(0.12, this.c1 + a1);
-        g.addColorStop(0.42, this.c2 + Math.floor(alpha * 230).toString(16).padStart(2,'0'));
-        g.addColorStop(0.72, this.c1 + a1); g.addColorStop(1, this.c1 + a0);
-        ctx.strokeStyle = g; ctx.lineWidth = 1.6 + (0.5 - dist) * 3.5;
-      }
-      ctx.stroke();
-    }
-  }
-}
-const ribbons =[
-  new Ribbon({ c1:'#00b8b0', c2:'#00e8e0', yBase:0.30, amplitude:110, freq:0.0042, phase:0.0,  speed:0.00036, thickness:70, layers:14, alpha:0.62 }),
-  new Ribbon({ c1:'#c09000', c2:'#e8b800', yBase:0.30, amplitude:110, freq:0.0042, phase:3.14, speed:0.00036, thickness:60, layers:12, alpha:0.52 }),
-  new Ribbon({ c1:'#00a8a0', c2:'#00d0c8', yBase:0.70, amplitude:100, freq:0.0046, phase:1.57, speed:0.00030, thickness:65, layers:13, alpha:0.55 }),
-  new Ribbon({ c1:'#b08000', c2:'#d8a400', yBase:0.70, amplitude:100, freq:0.0046, phase:4.71, speed:0.00030, thickness:55, layers:11, alpha:0.45 }),
-  new Ribbon({ c1:'#00c8c0', c2:'#00f0e8', yBase:0.50, amplitude:55,  freq:0.0060, phase:0.8,  speed:0.00022, thickness:28, layers:7,  alpha:0.28 }),
-  new Ribbon({ c1:'#c09800', c2:'#e0b400', yBase:0.50, amplitude:55,  freq:0.0060, phase:3.95, speed:0.00022, thickness:24, layers:6,  alpha:0.22 }),
-];
-function animate(ts) {
-  ctx.clearRect(0, 0, W, H);
-  ribbons.forEach(r => r.draw(ts));
-  requestAnimationFrame(animate);
-}
-requestAnimationFrame(animate);
+
 // ══════════════════════
 //  NAV
 // ══════════════════════
