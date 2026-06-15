@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════════════
-//  SUPERINTENDENT VISIT SUMMARY — Firebase Entegrasyonlu & Glassmorphism Modülü
+//  SUPERINTENDENT VISIT SUMMARY — Firebase Entegrasyonlu & Yüksek Kontrastlı Modül
 // ══════════════════════════════════════════════════════════════════════
 
 const SUPT_FB_URL = "https://spark-filo-panel-default-rtdb.europe-west1.firebasedatabase.app/superintendent_data.json";
@@ -15,15 +15,16 @@ const SUPT_SHIPS = [
 const SUPT_DEPTS = ['op','tek','hseq'];
 const SUPT_DEPT_LABEL = { op:'OPERASYON', tek:'TEKNİK', hseq:'HSEQ' };
 
-// Karanlık tema ile uyumlu modern renkler
-const SUPT_DEPT_COLOR = { op:'#4285f4', tek:'#34a853', hseq:'#d4a030' }; 
-const SUPT_DEPT_BG    = { op:'rgba(66, 133, 244, 0.1)', tek:'rgba(52, 168, 83, 0.1)', hseq:'rgba(212, 160, 48, 0.1)' };
+// Karanlık temada maksimum okunabilirlik için yüksek kontrastlı neon departman renkleri
+const SUPT_DEPT_COLOR = { op:'#5294e2', tek:'#2ecc71', hseq:'#f39c12' }; 
+const SUPT_DEPT_BG    = { op:'rgba(66, 133, 244, 0.15)', tek:'rgba(46, 204, 113, 0.15)', hseq:'rgba(243, 156, 18, 0.15)' };
 
+// Departman bazlı sekmelerdeki durum rozetleri için yüksek görünürlüklü soft/açık renkler
 const SUPT_STATUS_CLS = {
-  'Seyir':   { bg:'rgba(0, 240, 184, 0.15)', color:'var(--ok)', border:'rgba(0, 240, 184, 0.3)' },
-  'Liman':   { bg:'rgba(232, 184, 75, 0.15)', color:'var(--warn)', border:'rgba(232, 184, 75, 0.3)' },
-  'Demir':   { bg:'rgba(66, 133, 244, 0.15)', color:'#4285f4', border:'rgba(66, 133, 244, 0.3)' },
-  'Tersane': { bg:'rgba(255, 90, 114, 0.15)', color:'var(--bad)', border:'rgba(255, 90, 114, 0.3)' }
+  'Seyir':   { bg:'rgba(46, 204, 113, 0.2)', color:'#2ecc71', border:'rgba(46, 204, 113, 0.4)' },
+  'Liman':   { bg:'rgba(241, 196, 15, 0.2)', color:'#f1c40f', border:'rgba(241, 196, 15, 0.4)' },
+  'Demir':   { bg:'rgba(52, 152, 219, 0.2)', color:'#3498db', border:'rgba(52, 152, 219, 0.4)' },
+  'Tersane': { bg:'rgba(231, 76, 60, 0.2)',  color:'#e74c3c', border:'rgba(231, 76, 60, 0.4)' }
 };
 
 let suptState = {
@@ -64,7 +65,7 @@ function suptToast(msg, dur=2500) {
   if (!t) {
     t = document.createElement('div');
     t.id = 'suptToast';
-    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(0, 216, 200, 0.2);backdrop-filter:blur(10px);border:1px solid var(--teal);color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;font-family:inherit;';
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(10, 22, 26, 0.95);backdrop-filter:blur(10px);border:1px solid var(--teal);color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;font-family:inherit;';
     document.body.appendChild(t);
   }
   t.textContent = msg;
@@ -74,7 +75,7 @@ function suptToast(msg, dur=2500) {
   t._to = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(10px)'; }, dur);
 }
 
-// ─── FIREBASE OKUMA / YAZMA ──────────────────────────────────────────
+// ─── FIREBASE ENTEGRASYONU ──────────────────────────────────────────
 
 async function suptLoadFromFirebase() {
   const wrap = document.getElementById('suptLoadingWrap');
@@ -92,10 +93,10 @@ async function suptLoadFromFirebase() {
     if (hasData) {
       suptState.ships   = raw.ships;
       suptState.entries = raw.entries;
-      console.log("Firebase'den ziyaret verileri başarıyla çekildi.");
+      console.log("Firebase superintendent verileri yüklendi.");
     } else {
-      console.log("Firebase boş, geçmiş ziyaret verileri zorla entegre ediliyor...");
-      const oldDataRaw = {"ships":{"op":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"],"tek":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"],"hseq":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"]},"entries":{"op":{"GIFT":{"ARALIK":[{"name":"E.Gür","start":"2025-12-20","end":"2025-12-26","days":7,"status":"Liman"}],"NİSAN":[{"name":"E.Gür","start":"2026-04-28","end":"2026-04-30","days":3,"status":"Tersane"}],"MAYIS":[{"name":"E.Gür","start":"2026-05-01","end":"2026-05-21","days":21,"status":"Tersane"}],"AĞUSTOS":[{"name":"Y.Çağlar","start":"2025-08-06","end":"2025-08-13","days":8,"status":"Seyir"},{"name":"E.Köse","start":"2025-08-12","end":"2025-08-27","days":16,"status":"Tersane"}]},"KRONOS":{"EYLÜL":[{"name":"O.Benzet","start":"2025-09-11","end":"2025-09-29","days":19,"status":"Seyir"}]},"DREAM":{"EYLÜL":[{"name":"O.Karan","start":"2025-09-29","end":"2025-09-30","days":2,"status":"Liman"}],"NİSAN":[{"name":"O.Karan","start":"2026-04-21","end":"2026-04-24","days":4,"status":"Liman"}],"EKİM":[{"name":"O.Karan","start":"2025-10-01","end":"2025-10-01","days":1,"status":"Liman"}]},"FAUN":{"OCAK":[{"name":"O.Karan","start":"2026-01-01","end":"2026-01-19","days":19,"status":"Tersane"}],"ARALIK":[{"name":"O.Karan","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Tersane"}]},"FLAT":{"KASIM":[{"name":"O.Benzet","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Tersane"}],"ARALIK":[{"name":"O.Benzet","start":"2025-12-01","end":"2025-12-19","days":19,"status":"Tersane"}],"ŞUBAT":[{"name":"O.Benzet","start":"2026-02-10","end":"2026-02-25","days":16,"status":"Seyir"}]},"LAKER":{"KASIM":[{"name":"E.Köse","start":"2025-11-11","end":"2025-11-13","days":3}]},"JUST":{"OCAK":[{"name":"E.Köse","start":"2026-02-02","end":"2026-02-11","days":10,"status":"Demir"}],"ŞUBAT":[{"name":"O.Karan","start":"2026-02-26","end":"2026-02-28","days":3,"status":"Seyir"}],"MART":[{"name":"O.Karan","start":"2026-03-01","end":"2026-03-08","days":8,"status":"Liman"},{"name":"E.Köse","start":"2026-03-25","end":"2026-03-26","days":2,"status":"Liman"}],"NİSAN":[{"name":"O.Karan","start":"2026-04-03","end":"2026-04-03","days":1,"status":"Liman"}]},"IDON":{"HAZİRAN":[{"name":"Y.Çağlar","start":"2025-06-23","end":"2025-06-28","days":6}],"OCAK":[{"name":"E.Gür","start":"2026-01-24","end":"2026-01-31","days":8,"status":"Seyir"}],"ŞUBAT":[{"name":"E.Gür","start":"2026-02-01","end":"2026-02-13","days":13,"status":"Seyir"}]},"BEAM":{"HAZİRAN":[{"name":"O.Benzet","start":"2025-06-15","end":"2025-06-23","days":9,"status":"Seyir"}]},"CANAL":{},"DALI":{"OCAK":[{"name":"O.Benzet","start":"2026-01-20","end":"2026-01-23","days":4,"status":"Demir"}],"MART":[{"name":"E.Gür","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Liman"}]},"APRIL":{"HAZİRAN":[{"name":"O.Benzet","start":"2025-06-12","end":"2025-06-15","days":4,"status":"Seyir"}],"KASIM":[{"name":"O.Benzet","start":"2025-11-05","end":"2025-11-11","days":7,"status":"Seyir"}],"ARALIK":[{"name":"O.Benzet","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Demir"}],"OCAK":[{"name":"O.Benzet","start":"2026-01-01","end":"2026-01-16","days":16,"status":"Demir"}],"MART":[{"name":"O.Benzet","start":"2026-03-09","end":"2026-03-28","days":20,"status":"Tersane"}],"NİSAN":[{"name":"O.Benzet","start":"2026-04-01","end":"2026-04-28","days":28,"status":"Tersane"}]},"COMET":{"OCAK":[{"name":"O.Karan","start":"2026-01-19","end":"2026-01-28","days":10,"status":"Tersane"}]},"ARES":{},"DODO":{},"ZEYNEP (NEW)":{"KASIM":[{"name":"E.Köse","start":"2025-11-09","end":"2025-11-20","days":12,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"E.Köse","start":"2026-04-01","end":"2026-04-15","days":15,"status":"Tersane"}],"MART":[{"name":"E.Köse","start":"2026-03-31","end":"2026-03-31","days":1,"status":"Tersane"}]},"GANI (SOLD)":{"AĞUSTOS":[]}},"tek":{"GIFT":{"AĞUSTOS":[{"name":"M.O.Kırmızı","start":"2025-08-12","end":"2025-08-27","days":16,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-08-14","end":"2025-08-31","days":18,"status":"Tersane"}],"EYLÜL":[{"name":"M.O.Kırmızı","start":"2025-09-23","end":"2025-09-30","days":8,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-09-01","end":"2025-09-30","days":30,"status":"Tersane"}],"EKİM":[{"name":"M.O.Kırmızı","start":"2025-10-01","end":"2025-10-01","days":1,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-10-01","end":"2025-10-03","days":3,"status":"Tersane"}],"ARALIK":[{"name":"K.Gümüş","start":"2025-12-20","end":"2025-12-26","days":7,"status":"Liman"}],"MAYIS":[{"name":"Ö.B.Yıldırım","start":"2026-05-01","end":"2026-05-22","days":22}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-28","end":"2026-04-30","days":3}]},"KRONOS":{},"DREAM":{"NİSAN":[{"name":"C.Yayla","start":"2026-04-20","end":"2026-04-25","days":6,"status":"Liman"},{"name":"D.İlimsever","start":"2026-04-20","end":"2026-04-25","days":6,"status":"Liman"}]},"FAUN":{"ARALIK":[{"name":"D.İlimsever","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Tersane"},{"name":"Ö.B.Yıldırım","start":"2025-12-29","end":"2025-12-31","days":3,"status":"Tersane"}],"OCAK":[{"name":"D.İlimsever","start":"2026-01-01","end":"2026-01-21","days":21,"status":"Tersane"},{"name":"Ö.B.Yıldırım","start":"2026-01-01","end":"2026-01-31","days":31,"status":"Tersane"}],"MART":[{"name":"D.İlimsever","start":"2026-03-17","end":"2026-03-28","days":12,"status":"Seyir"}]},"FLAT":{"KASIM":[{"name":"K.Gümüş","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Tersane"}],"ARALIK":[{"name":"K.Gümüş","start":"2025-12-01","end":"2025-12-19","days":19,"status":"Tersane"}],"ŞUBAT":[{"name":"K.Gümüş","start":"2026-02-13","end":"2026-02-25","days":13,"status":"Seyir"}]},"LAKER":{"TEMMUZ":[{"name":"C.Yayla","start":"2025-07-21","end":"2025-07-26","days":6,"status":"Liman"}],"KASIM":[{"name":"C.Yayla","start":"2025-11-28","end":"2025-11-30","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2025-11-20","end":"2025-11-30","days":11,"status":"Tersane"}],"ARALIK":[{"name":"C.Yayla","start":"2025-12-01","end":"2025-12-03","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2025-12-01","end":"2025-12-24","days":24,"status":"Tersane"}]},"JUST":{"EYLÜL":[{"name":"D.İlimsever","start":"2025-09-17","end":"2025-09-30","days":14,"status":"Liman"},{"name":"C.Yayla","start":"2025-09-17","end":"2025-09-30","days":14,"status":"Seyir"}],"MART":[{"name":"C.Yayla","start":"2026-03-25","end":"2026-03-27","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2026-03-25","end":"2026-03-26","days":2,"status":"Liman"}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-02","end":"2026-04-02","days":1}]},"IDON":{"HAZİRAN":[{"name":"C.Yayla","start":"2025-06-17","end":"2025-06-21","days":5,"status":"Liman"},{"name":"K.Gümüş","start":"2025-06-17","end":"2025-06-23","days":7,"status":"Liman"}],"ŞUBAT":[{"name":"D.İlimsever","start":"2026-01-22","end":"2026-02-13","days":23,"status":"Seyir"}]},"BEAM":{"HAZİRAN":[{"name":"Ö.B.Yıldırım","start":"2025-06-17","end":"2025-06-23","days":7,"status":"Seyir"}]},"CANAL":{},"DALI":{"OCAK":[{"name":"K.Gümüş","start":"2026-01-20","end":"2026-01-23","days":4,"status":"Seyir"}],"MART":[{"name":"K.Gümüş","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Seyir"},{"name":"C.Yayla","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Seyir"}]},"APRIL":{"KASIM":[{"name":"C.Yayla","start":"2025-11-05","end":"2025-11-10","days":6,"status":"Liman"}],"MART":[{"name":"M.O.Kırmızı","start":"2026-03-09","end":"2026-03-31","days":23,"status":"Tersane"}],"NİSAN":[{"name":"M.O.Kırmızı","start":"2026-04-01","end":"2026-04-30","days":30,"status":"Tersane"}],"MAYIS":[{"name":"K.Gümüş","start":"2026-05-16","end":"2026-05-26","days":11,"status":"Liman"}]},"COMET":{"OCAK":[{"name":"Ö.B.Yıldırım","start":"2026-01-01","end":"2026-01-31","days":31,"status":"Tersane"}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-22","end":"2026-04-22","days":1,"status":"Tersane"}],"MART":[{"name":"Ö.B.Yıldırım","start":"2026-03-01","end":"2026-03-02","days":2,"status":"Tersane"}],"ŞUBAT":[{"name":"Ö.B.Yıldırım","start":"2026-02-01","end":"2026-02-28","days":28,"status":"Tersane"}]},"ARES":{"MART":[{"name":"D.İlimsever","start":"2026-03-01","end":"2026-03-11","days":11,"status":"Liman"}]},"DODO":{"TEMMUZ":[{"name":"M.O.Kırmızı","start":"2025-07-26","end":"2025-07-30","days":5,"status":"Liman"}],"AĞUSTOS":[{"name":"M.O.Kırmızı","start":"2025-08-01","end":"2025-08-02","days":2,"status":"Liman"}],"NİSAN":[{"name":"K.Gümüş","start":"2026-04-26","end":"2026-04-30","days":5,"status":"Seyir"}],"MAYIS":[{"name":"K.Gümüş","start":"2026-05-01","end":"2026-05-01","days":1,"status":"Seyir"}]},"ZEYNEP (NEW)":{"KASIM":[{"name":"M.O.Kırmızı","start":"2025-11-09","end":"2025-11-20","days":12,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"M.O.Kırmızı","start":"2026-04-05","end":"2026-04-15","days":11,"status":"Tersane"}],"MART":[{"name":"M.O.Kırmızı","start":"2026-03-31","end":"2026-03-31","days":1,"status":"Tersane"}]},"GANI (SOLD)":{}},"hseq":{"GIFT":{"HAZİRAN":[{"name":"M.B.Aktaş","start":"2025-06-02","end":"2025-06-05","days":4,"status":"Liman"},{"name":"M.A.Yener","start":"2025-06-02","end":"2025-06-05","days":4,"status":"Liman"}],"ŞUBAT":[{"name":"M.A.Yener","start":"2026-02-10","end":"2026-02-13","days":4,"status":"Demir"},{"name":"M.B.Aktaş","start":"2026-02-10","end":"2026-02-13","days":4,"status":"Demir"}]},"KRONOS":{"TEMMUZ":[{"name":"M.A.Yener","start":"2025-07-04","end":"2025-07-09","days":6,"status":"Liman"}]},"DREAM":{"AĞUSTOS":[{"name":"M.B.Aktaş","start":"2025-08-24","end":"2025-08-31","days":8,"status":"Liman"},{"name":"M.A.Yener","start":"2025-08-24","end":"2025-08-31","days":8,"status":"Liman"}],"ARALIK":[],"KASIM":[]},"FAUN":{},"FLAT":{"OCAK":[{"name":"M.B.Aktaş","start":"2026-01-07","end":"2026-01-10","days":4,"status":"Tersane"}]},"LAKER":{"TEMMUZ":[{"name":"M.A.Yener","start":"2025-07-21","end":"2025-07-25","days":5,"status":"Liman"},{"name":"M.B.Aktaş","start":"2025-07-21","end":"2025-07-25","days":5,"status":"Liman"}],"KASIM":[{"name":"S.İntepe","start":"2025-11-23","end":"2025-11-30","days":8}]},"JUST":{"EYLÜL":[{"name":"M.B.Aktaş","start":"2025-09-17","end":"2025-09-20","days":4,"status":"Liman"}]},"IDON":{},"BEAM":{},"CANAL":{"KASIM":[{"name":"M.A.Yener","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Seyir"}],"ARALIK":[{"name":"M.A.Yener","start":"2025-12-01","end":"2025-12-12","days":12,"status":"Seyir"}]},"DALI":{},"APRIL":{"NİSAN":[{"name":"M.B.Aktaş","start":"2026-04-16","end":"2026-04-25","days":10,"status":"Tersane"},{"name":"S.İntepe","start":"2026-04-27","end":"2026-04-29","days":3}]},"COMET":{},"ARES":{},"DODO":{},"ZEYNEP (NEW)":{"OCAK":[{"name":"M.B.Aktaş","start":"2026-01-02","end":"2026-01-06","days":5,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"M.B.Aktaş","start":"2026-04-16","end":"2026-04-25","days":10,"status":"Tersane"}]},"GANI (SOLD)":{}}}};
+      console.log("Firebase boş, yerel şablon entegre ediliyor...");
+      const oldDataRaw = {"ships":{"op":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"],"tek":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"],"hseq":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"]},"entries":{"op":{"GIFT":{"ARALIK":[{"name":"E.Gür","start":"2025-12-20","end":"2025-12-26","days":7,"status":"Liman"}],"NİSAN":[{"name":"E.Gür","start":"2026-04-28","end":"2026-04-30","days":3,"status":"Tersane"}],"MAYIS":[{"name":"E.Gür","start":"2026-05-01","end":"2026-05-21","days":21,"status":"Tersane"}],"AĞUSTOS":[{"name":"Y.Çağlar","start":"2025-08-06","end":"2025-08-13","days":8,"status":"Seyir"},{"name":"E.Köse","start":"2025-08-12","end":"2025-08-27","days":16,"status":"Tersane"}]},"KRONOS":{"EYLÜL":[{"name":"O.Benzet","start":"2025-09-11","end":"2025-09-29","days":19,"status":"Seyir"}]},"DREAM":{"EYLÜL":[{"name":"O.Karan","start":"2025-09-29","end":"2025-09-30","days":2,"status":"Liman"}],"NİSAN":[{"name":"O.Karan","start":"2026-04-21","end":"2026-04-24","days":4,"status":"Liman"}],"EKİM":[{"name":"O.Karan","start":"2025-10-01","end":"2025-10-01","days":1,"status":"Liman"}]},"FAUN":{"OCAK":[{"name":"O.Karan","start":"2026-01-01","end":"2026-01-19","days":19,"status":"Tersane"}],"ARALIK":[{"name":"O.Karan","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Tersane"}]},"FLAT":{"KASIM":[{"name":"O.Benzet","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Tersane"}],"ARALIK":[{"name":"O.Benzet","start":"2025-12-01","end":"2025-12-19","days":19,"status":"Tersane"}],"ŞUBAT":[{"name":"O.Benzet","start":"2026-02-10","end":"2026-02-25","days":16,"status":"Seyir"}]},"LAKER":{"KASIM":[{"name":"E.Köse","start":"2025-11-11","end":"2025-11-13","days":3}]},"JUST":{"OCAK":[{"name":"E.Köse","start":"2026-02-02","end":"2026-02-11","days":10,"status":"Demir"}],"ŞUBAT":[{"name":"O.Karan","start":"2026-02-26","end":"2026-02-28","days":3,"status":"Seyir"}],"MART":[{"name":"O.Karan","start":"2026-03-01","end":"2026-03-08","days":8,"status":"Liman"},{"name":"E.Köse","start":"2026-03-25","end":"2026-03-26","days":2,"status":"Liman"}],"NİSAN":[{"name":"O.Karan","start":"2026-04-03","end":"2026-04-03","days":1,"status":"Liman"}]},"IDON":{"HAZİRAN":[{"name":"Y.Çağlar","start":"2025-06-23","end":"2025-06-28","days":6}],"OCAK":[{"name":"E.Gür","start":"2026-01-24","end":"2026-01-31","days":8,"status":"Seyir"}],"ŞUBAT":[{"name":"E.Gür","start":"2026-02-01","end":"2026-02-13","days":13,"status":"Seyir"}]},"BEAM":{"HAZİRAN":[{"name":"O.Benzet","start":"2025-06-15","end":"2025-06-23","days":9,"status":"Seyir"}]},"CANAL":{},"DALI":{"OCAK":[{"name":"O.Benzet","start":"2026-01-20","end":"2026-01-23","days":4,"status":"Demir"}],"MART":[{"name":"E.Gür","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Liman"}]},"APRIL":{"HAZİRAN":[{"name":"O.Benzet","start":"2025-06-12","end":"2025-06-15","days":4,"status":"Seyir"}],"KASIM":[{"name":"O.Benzet","start":"2025-11-05","end":"2025-11-11","days":7,"status":"Seyir"}],"ARALIK":[{"name":"O.Benzet","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Demir"}],"OCAK":[{"name":"O.Benzet","start":"2026-01-01","end":"2026-01-16","days":16,"status":"Demir"}],"MART":[{"name":"O.Benzet","start":"2026-03-09","end":"2026-03-28","days":20,"status":"Tersane"}],"NİSAN":[{"name":"O.Benzet","start":"2026-04-01","end":"2026-04-28","days":28,"status":"Tersane"}]},"COMET":{"OCAK":[{"name":"O.Karan","start":"2026-01-19","end":"2026-01-28","days":10,"status":"Tersane"}]},"ARES":{},"DODO":{},"ZEYNEP (NEW)":{"KASIM":[{"name":"E.Köse","start":"2025-11-09","end":"2025-11-20","days":12,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"E.Köse","start":"2026-04-01","end":"2026-04-15","days":15,"status":"Tersane"}],"MART":[{"name":"E.Köse","start":"2026-03-31","end":"2026-03-31","days":1,"status":"Tersane"}],"MAYIS":[]},"GANI (SOLD)":{"AĞUSTOS":[]}},"tek":{"GIFT":{"AĞUSTOS":[{"name":"M.O.Kırmızı","start":"2025-08-12","end":"2025-08-27","days":16,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-08-14","end":"2025-08-31","days":18,"status":"Tersane"}],"EYLÜL":[{"name":"M.O.Kırmızı","start":"2025-09-23","end":"2025-09-30","days":8,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-09-01","end":"2025-09-30","days":30,"status":"Tersane"}],"EKİM":[{"name":"M.O.Kırmızı","start":"2025-10-01","end":"2025-10-01","days":1,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-10-01","end":"2025-10-03","days":3,"status":"Tersane"}],"ARALIK":[{"name":"K.Gümüş","start":"2025-12-20","end":"2025-12-26","days":7,"status":"Liman"}],"MAYIS":[{"name":"Ö.B.Yıldırım","start":"2026-05-01","end":"2026-05-22","days":22}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-28","end":"2026-04-30","days":3}]},"KRONOS":{},"DREAM":{"NİSAN":[{"name":"C.Yayla","start":"2026-04-20","end":"2026-04-25","days":6,"status":"Liman"},{"name":"D.İlimsever","start":"2026-04-20","end":"2026-04-25","days":6,"status":"Liman"}]},"FAUN":{"ARALIK":[{"name":"D.İlimsever","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Tersane"},{"name":"Ö.B.Yıldırım","start":"2025-12-29","end":"2025-12-31","days":3,"status":"Tersane"}],"OCAK":[{"name":"D.İlimsever","start":"2026-01-01","end":"2026-01-21","days":21,"status":"Tersane"},{"name":"Ö.B.Yıldırım","start":"2026-01-01","end":"2026-01-31","days":31,"status":"Tersane"}],"MART":[{"name":"D.İlimsever","start":"2026-03-17","end":"2026-03-28","days":12,"status":"Seyir"}]},"FLAT":{"KASIM":[{"name":"K.Gümüş","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Tersane"}],"ARALIK":[{"name":"K.Gümüş","start":"2025-12-01","end":"2025-12-19","days":19,"status":"Tersane"}],"ŞUBAT":[{"name":"K.Gümüş","start":"2026-02-13","end":"2026-02-25","days":13,"status":"Seyir"}]},"LAKER":{"TEMMUZ":[{"name":"C.Yayla","start":"2025-07-21","end":"2025-07-26","days":6,"status":"Liman"}],"KASIM":[{"name":"C.Yayla","start":"2025-11-28","end":"2025-11-30","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2025-11-20","end":"2025-11-30","days":11,"status":"Tersane"}],"ARALIK":[{"name":"C.Yayla","start":"2025-12-01","end":"2025-12-03","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2025-12-01","end":"2025-12-24","days":24,"status":"Tersane"}]},"JUST":{"EYLÜL":[{"name":"D.İlimsever","start":"2025-09-17","end":"2025-09-30","days":14,"status":"Liman"},{"name":"C.Yayla","start":"2025-09-17","end":"2025-09-30","days":14,"status":"Seyir"}],"MART":[{"name":"C.Yayla","start":"2026-03-25","end":"2026-03-27","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2026-03-25","end":"2026-03-26","days":2,"status":"Liman"}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-02","end":"2026-04-02","days":1}]},"IDON":{"HAZİRAN":[{"name":"C.Yayla","start":"2025-06-17","end":"2025-06-21","days":5,"status":"Liman"},{"name":"K.Gümüş","start":"2025-06-17","end":"2025-06-23","days":7,"status":"Liman"}],"ŞUBAT":[{"name":"D.İlimsever","start":"2026-01-22","end":"2026-02-13","days":23,"status":"Seyir"}]},"BEAM":{"HAZİRAN":[{"name":"Ö.B.Yıldırım","start":"2025-06-17","end":"2025-06-23","days":7,"status":"Seyir"}]},"CANAL":{},"DALI":{"OCAK":[{"name":"K.Gümüş","start":"2026-01-20","end":"2026-01-23","days":4,"status":"Seyir"}],"MART":[{"name":"K.Gümüş","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Seyir"},{"name":"C.Yayla","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Seyir"}]},"APRIL":{"KASIM":[{"name":"C.Yayla","start":"2025-11-05","end":"2025-11-10","days":6,"status":"Liman"}],"MART":[{"name":"M.O.Kırmızı","start":"2026-03-09","end":"2026-03-31","days":23,"status":"Tersane"}],"NİSAN":[{"name":"M.O.Kırmızı","start":"2026-04-01","end":"2026-04-30","days":30,"status":"Tersane"}],"MAYIS":[{"name":"K.Gümüş","start":"2026-05-16","end":"2026-05-26","days":11,"status":"Liman"}]},"COMET":{"OCAK":[{"name":"Ö.B.Yıldırım","start":"2026-01-01","end":"2026-01-31","days":31,"status":"Tersane"}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-22","end":"2026-04-22","days":1,"status":"Tersane"}],"MART":[{"name":"Ö.B.Yıldırım","start":"2026-03-01","end":"2026-03-02","days":2,"status":"Tersane"}],"ŞUBAT":[{"name":"Ö.B.Yıldırım","start":"2026-02-01","end":"2026-02-28","days":28,"status":"Tersane"}]},"ARES":{"MART":[{"name":"D.İlimsever","start":"2026-03-01","end":"2026-03-11","days":11,"status":"Liman"}]},"DODO":{"TEMMUZ":[{"name":"M.O.Kırmızı","start":"2025-07-26","end":"2025-07-30","days":5,"status":"Liman"}],"AĞUSTOS":[{"name":"M.O.Kırmızı","start":"2025-08-01","end":"2025-08-02","days":2,"status":"Liman"}],"NİSAN":[{"name":"K.Gümüş","start":"2026-04-26","end":"2026-04-30","days":5,"status":"Seyir"}],"MAYIS":[{"name":"K.Gümüş","start":"2026-05-01","end":"2026-05-01","days":1,"status":"Seyir"}]},"ZEYNEP (NEW)":{"KASIM":[{"name":"M.O.Kırmızı","start":"2025-11-09","end":"2025-11-20","days":12,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"M.O.Kırmızı","start":"2026-04-05","end":"2026-04-15","days":11,"status":"Tersane"}]},"GANI (SOLD)":{}},"hseq":{"GIFT":{"HAZİRAN":[{"name":"M.B.Aktaş","start":"2025-06-02","end":"2025-06-05","days":4,"status":"Liman"}],"ŞUBAT":[{"name":"M.A.Yener","start":"2026-02-10","end":"2026-02-13","days":4,"status":"Demir"},{"name":"M.B.Aktaş","start":"2026-02-10","end":"2026-02-13","days":4,"status":"Demir"}]},"KRONOS":{"TEMMUZ":[{"name":"M.A.Yener","start":"2025-07-04","end":"2025-07-09","days":6,"status":"Liman"}]},"DREAM":{"AĞUSTOS":[{"name":"M.B.Aktaş","start":"2025-08-24","end":"2025-08-31","days":8,"status":"Liman"},{"name":"M.A.Yener","start":"2025-08-24","end":"2025-08-31","days":8,"status":"Liman"}],"ARALIK":[],"KASIM":[]},"FAUN":{},"FLAT":{"OCAK":[{"name":"M.B.Aktaş","start":"2026-01-07","end":"2026-01-10","days":4,"status":"Tersane"}]},"LAKER":{"TEMMUZ":[{"name":"M.A.Yener","start":"2025-07-21","end":"2025-07-25","days":5,"status":"Liman"},{"name":"M.B.Aktaş","start":"2025-07-21","end":"2025-07-25","days":5,"status":"Liman"}],"KASIM":[{"name":"S.İntepe","start":"2025-11-23","end":"2025-11-30","days":8}]},"JUST":{"EYLÜL":[{"name":"M.B.Aktaş","start":"2025-09-17","end":"2025-09-20","days":4,"status":"Liman"}]},"IDON":{},"BEAM":{},"CANAL":{"KASIM":[{"name":"M.A.Yener","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Seyir"}],"ARALIK":[{"name":"M.A.Yener","start":"2025-12-01","end":"2025-12-12","days":12,"status":"Seyir"}]},"DALI":{},"APRIL":{"NİSAN":[{"name":"M.B.Aktaş","start":"2026-04-16","end":"2026-04-25","days":10,"status":"Tersane"},{"name":"S.İntepe","start":"2026-04-27","end":"2026-04-29","days":3}]},"COMET":{},"ARES":{},"DODO":{},"ZEYNEP (NEW)":{"OCAK":[{"name":"M.B.Aktaş","start":"2026-01-02","end":"2026-01-06","days":5,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"M.B.Aktaş","start":"2026-04-16","end":"2026-04-25","days":10,"status":"Tersane"}]},"GANI (SOLD)":{}}}};
 
       const monthMap = {
         "HAZİRAN": "2025-06", "TEMMUZ": "2025-07", "AĞUSTOS": "2025-08",
@@ -123,7 +124,7 @@ async function suptLoadFromFirebase() {
     }
   } catch(e) {
     console.error('Superintendent Firebase yükleme hatası:', e);
-    suptToast('⚠️ Veriler yüklenemedi, internet bağlantısını kontrol edin.', 4000);
+    suptToast('⚠️ Veriler yüklenemedi, bağlantıyı kontrol edin.', 4000);
   } finally {
     if (wrap) wrap.style.display = 'none';
     suptRenderCurrentTab();
@@ -142,18 +143,16 @@ async function suptSaveToFirebase() {
     console.log('Superintendent verisi Firebase\'e kaydedildi.');
   } catch(e) {
     console.error('Superintendent kaydetme hatası:', e);
-    suptToast('⚠️ Kaydetme başarısız!', 3500);
   } finally {
     suptSaving = false;
   }
 }
 
-// ─── SEKME YÖNETİMİ VE GLASSMORPHISM ─────────────────────────────────────────
+// ─── SEKME YÖNETİMİ (ZORLU DISPLAY GÜNCELLEMESİ) ──────────────────────────────
 
 function suptTabSwitch(panelId) {
   suptCurrentTab = panelId;
   
-  // 1. Butonların durumunu ayarla
   document.querySelectorAll('#superintendentPanel .supt-tab').forEach(t => {
     const isActive = t.dataset.panel === panelId;
     t.classList.toggle('active', isActive);
@@ -167,13 +166,13 @@ function suptTabSwitch(panelId) {
     }
   });
   
-  // 2. HTML'deki inline "display: none" özelliğini ezerek görünür yap
+  // HTML inline style="display:none" baskınlığını tamamen ezerek görünür yapıyoruz
   document.querySelectorAll('#superintendentPanel .supt-panel').forEach(p => {
     if (p.id === panelId) {
-      p.style.display = 'block'; 
+      p.style.setProperty('display', 'block', 'important');
       p.classList.add('active');
     } else {
-      p.style.display = 'none'; 
+      p.style.setProperty('display', 'none', 'important');
       p.classList.remove('active');
     }
   });
@@ -191,28 +190,37 @@ function suptRenderCurrentTab() {
     case 'p-hseq':    suptRenderDept('hseq'); break;
   }
   
-  // Tüm tabloların arkasına mat cam (Glassmorphism) ekle
+  // Tablolara transparan mat cam arkaplanı ve kenarlık ekle
   setTimeout(() => {
-      document.querySelectorAll('#superintendentPanel table').forEach(tbl => {
-          let wrapper = tbl.parentElement;
+      document.querySelectorAll('#superintendentPanel .tbl-wrap, #superintendentPanel .etbl-wrap').forEach(wrapper => {
           if(wrapper) {
-              wrapper.style.background = 'rgba(14, 32, 36, 0.75)'; 
+              wrapper.style.setProperty('background', 'rgba(14, 32, 36, 0.75)', 'important');
               wrapper.style.backdropFilter = 'blur(16px)';
               wrapper.style.WebkitBackdropFilter = 'blur(16px)';
               wrapper.style.border = '1px solid rgba(0, 216, 200, 0.15)';
               wrapper.style.borderRadius = '12px';
               wrapper.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
-          }
-          let theadTr = tbl.querySelector('thead tr');
-          if (theadTr) {
-              theadTr.style.background = 'rgba(0, 0, 0, 0.4)';
-              theadTr.style.color = 'var(--muted)';
+              wrapper.style.overflow = 'auto';
           }
       });
-  }, 50);
+
+      document.querySelectorAll('#superintendentPanel table').forEach(tbl => {
+          let theadTr = tbl.querySelector('thead tr');
+          if (theadTr) {
+              theadTr.style.setProperty('background', 'rgba(0, 0, 0, 0.45)', 'important');
+              theadTr.style.setProperty('color', 'var(--text)', 'important');
+          }
+          // İçerideki beyaz çizgileri / sütun arka planlarını sıfırla
+          tbl.querySelectorAll('td').forEach(td => {
+              if(!td.classList.contains('sname')) {
+                  td.style.backgroundColor = 'transparent';
+              }
+          });
+      });
+  }, 30);
 }
 
-// ─── VERİ OKUMA / AYIKLAMA (🔥 ARRAY/OBJECT HATASINA KARŞI GÜVENLİ) ────────────────
+// ─── VERİ AYIKLAMA (GÜVENLİ KATMAN) ──────────────────────────────────────────
 
 function suptGetAllEntries() {
   const result = [];
@@ -222,7 +230,6 @@ function suptGetAllEntries() {
       const monthMap = deptEntries[ship] || {};
       Object.keys(monthMap).forEach(mk => {
         const rawArr = monthMap[mk];
-        // Firebase Dizi/Obje çevirme hatasını ezen güvenlik kalkanı
         const list = Array.isArray(rawArr) ? rawArr : Object.values(rawArr || {});
         list.forEach(e => {
           if (e) result.push({ ...e, dept, ship, monthKey: mk });
@@ -241,7 +248,6 @@ function suptGetExtendedMonthKeys(allEntries) {
   const now = new Date();
   const futureEnd = new Date(now.getFullYear(), now.getMonth() + 3, 1);
   const futureKey = `${futureEnd.getFullYear()}-${String(futureEnd.getMonth()+1).padStart(2,'0')}`;
-
   const maxKey = futureKey > minKey ? futureKey : minKey;
 
   const keys = [];
@@ -284,20 +290,20 @@ function suptRenderToplam() {
   const sortedKeys = Object.keys(byMonth).sort().reverse();
   let html = '';
   sortedKeys.forEach(mk => {
-    html += `<tr><td colspan="7" style="background:rgba(0, 216, 200, 0.1);color:var(--teal);border-bottom:1px solid rgba(0,216,200,0.2);font-weight:700;font-size:12px;letter-spacing:1px;padding:8px 12px;">▼ ${suptMonthLabel(mk)}</td></tr>`;
+    html += `<tr><td colspan="7" style="background:rgba(0, 216, 200, 0.12);color:var(--teal);border-bottom:1px solid rgba(0,216,200,0.25);font-weight:700;font-size:12px;letter-spacing:1px;padding:8px 12px;text-align:left;">▼ ${suptMonthLabel(mk)}</td></tr>`;
     byMonth[mk].forEach(e => {
       const dCls = SUPT_DEPT_COLOR[e.dept] || '#888';
       const dLabel = SUPT_DEPT_LABEL[e.dept] || e.dept;
       html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);">
-        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px;">${suptMonthLabel(mk)}</td>
-        <td style="padding:8px 12px;">${e.name}</td>
-        <td style="padding:8px 12px;font-weight:700;color:var(--teal);">${e.ship}</td>
-        <td style="padding:8px 12px;">
+        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px; text-align:left;">${suptMonthLabel(mk)}</td>
+        <td style="padding:8px 12px;text-align:left;">${e.name}</td>
+        <td style="padding:8px 12px;font-weight:700;color:var(--teal);text-align:left;">${e.ship}</td>
+        <td style="padding:8px 12px;text-align:left;">
           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dCls};margin-right:5px;box-shadow:0 0 5px ${dCls};"></span>${dLabel}
         </td>
-        <td style="padding:8px 12px;font-weight:700;color:var(--warn);">${e.days}</td>
-        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px;">${suptFmtDate(e.start)}</td>
-        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px;">${suptFmtDate(e.end)}</td>
+        <td style="padding:8px 12px;font-weight:700;color:var(--warn);text-align:left;">${e.days}</td>
+        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px;text-align:left;">${suptFmtDate(e.start)}</td>
+        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px;text-align:left;">${suptFmtDate(e.end)}</td>
       </tr>`;
     });
   });
@@ -322,46 +328,66 @@ function suptRenderCalisan() {
   sorted.forEach(([name, d]) => {
     const deptBadges = [...d.depts].map(dep => `<span style="background:rgba(255,255,255,0.05);color:${SUPT_DEPT_COLOR[dep]};border:1px solid ${SUPT_DEPT_COLOR[dep]};padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;margin-right:3px;">${SUPT_DEPT_LABEL[dep]}</span>`).join('');
     html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);">
-      <td style="padding:9px 12px;font-weight:700;">${name}</td>
-      <td style="padding:9px 12px;">${deptBadges}</td>
-      <td style="padding:9px 12px;font-weight:900;color:var(--ok);">${d.days}</td>
-      <td style="padding:9px 12px;">${d.visits}</td>
-      <td style="padding:9px 12px;color:var(--muted);">${[...d.ships].join(', ')}</td>
+      <td style="padding:9px 12px;font-weight:700;text-align:left;">${name}</td>
+      <td style="padding:9px 12px;text-align:left;">${deptBadges}</td>
+      <td style="padding:9px 12px;font-weight:900;color:var(--ok);text-align:left;">${d.days}</td>
+      <td style="padding:9px 12px;text-align:left;">${d.visits}</td>
+      <td style="padding:9px 12px;color:var(--muted);text-align:left;">${[...d.ships].join(', ')}</td>
     </tr>`;
   });
   document.getElementById('suptCalisanBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
 }
 
-// ─── ZİYARET TABLOSU (BULK OVERVIEW) ────────────────────────────────
+// ─── ZİYARET TABLOSU (ORIGINAL TASARIMA GÖRE DEPARTMAN BADGELİ HARİTA) ───
 
 function suptRenderBulk() {
   const allEntries = suptGetAllEntries();
   const allMonths = [...new Set(allEntries.map(e => e.monthKey))].sort();
   const allShips  = suptGetAllShips();
 
-  let thHtml = '<th style="text-align:left;padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);">GEMİ</th>';
+  let thHtml = '<th style="text-align:left;padding:10px;background:rgba(10, 22, 26, 0.95);color:var(--muted);position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.25);z-index:3;">GEMİ</th>';
   allMonths.forEach(mk => {
-    thHtml += `<th style="padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);text-align:center;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.2);">${suptMonthLabel(mk)}</th>`;
+    thHtml += `<th style="padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);text-align:center;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.25);">${suptMonthLabel(mk)}</th>`;
   });
 
-  let tbodyHtml = '';
+  // Üst taraftaki "Ofiste Kalan" satırı
+  const totalInspectors = getAllNames().length;
+  let tbodyHtml = `<tr style="background:rgba(0,216,200,0.03); border-bottom:1px solid rgba(0,216,200,0.15);">
+    <td style="position:sticky; left:0; background:rgba(14,32,36,0.95); color:var(--warn); font-weight:700; text-align:left; z-index:2; border-right:1px solid rgba(0,216,200,0.15);">OFİSTE KALAN ENSPEKTÖR SAYISI</td>`;
+  allMonths.forEach(mk => {
+    const namesOnShips = new Set();
+    SUPT_DEPTS.forEach(dept => {
+      Object.keys(suptState.entries[dept] || {}).forEach(ship => {
+        const rawArr = suptState.entries[dept][ship]?.[mk];
+        const list = Array.isArray(rawArr) ? rawArr : Object.values(rawArr || {});
+        list.forEach(e => { if(e) namesOnShips.add(e.name); });
+      });
+    });
+    const remaining = totalInspectors - namesOnShips.size;
+    tbodyHtml += `<td style="font-size:13px; color:#fff; font-weight:800; text-align:center; font-family:'DM Mono';">${remaining} <span style="font-size:10px; font-weight:normal; color:var(--muted);">/ ${totalInspectors}</span></td>`;
+  });
+  tbodyHtml += '</tr>';
+
+  // Gemi satırları (Orijinal tasarımdaki gibi HSEQ, OP, TEK şeklinde departman rozetleriyle)
   allShips.forEach(ship => {
-    let row = `<td style="padding:7px 10px;font-weight:700;background:rgba(14,32,36,0.9);color:var(--text);position:sticky;left:0;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05);">${ship}</td>`;
+    let row = `<td style="padding:7px 10px;font-weight:700;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:2;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05); text-align:left;">${ship}</td>`;
     allMonths.forEach(mk => {
       let chips = '';
       SUPT_DEPTS.forEach(dept => {
         const rawArr = suptState.entries[dept]?.[ship]?.[mk];
         const entries = Array.isArray(rawArr) ? rawArr : Object.values(rawArr || {});
         
-        entries.forEach(e => {
-          if(!e) return;
-          const col = SUPT_DEPT_COLOR[dept];
-          chips += `<span style="display:inline-block;background:rgba(255,255,255,0.05);color:${col};border:1px solid ${col};padding:2px 5px;border-radius:4px;font-size:10px;font-weight:700;margin:2px;">${e.name.split('.')[0]}.${e.name.split('.')[1]||''} (${e.days}g)</span>`;
-        });
+        if (entries.length > 0) {
+            const label = dept.toUpperCase();
+            const col = SUPT_DEPT_COLOR[dept];
+            const bg  = SUPT_DEPT_BG[dept];
+            // Orijinal tasarımdaki kutucuklar (Açık renkli / yüksek kontrastlı metin ile)
+            chips += `<span class="xm" style="display:inline-block; background:${bg}; color:${col}; border:1px solid ${col}; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:800; margin:2px; letter-spacing:0.5px;">${label}</span>`;
+        }
       });
-      row += `<td style="padding:6px 8px;text-align:center;border-bottom:1px solid rgba(0,216,200,0.05);vertical-align:middle;">${chips || '<span style="color:rgba(255,255,255,0.1);font-size:11px;">—</span>'}</td>`;
+      row += `<td style="padding:6px 8px;text-align:center;border-bottom:1px solid rgba(0,216,200,0.05);vertical-align:middle;">${chips || '<span style="color:rgba(255,255,255,0.05);font-size:11px;">—</span>'}</td>`;
     });
-    tbodyHtml += `<tr style="transition:background 0.2s;" onmouseover="this.style.background='rgba(0,216,200,0.05)'" onmouseout="this.style.background='transparent'">${row}</tr>`;
+    tbodyHtml += `<tr style="transition:background 0.2s;" onmouseover="this.style.background='rgba(0,216,200,0.03)'" onmouseout="this.style.background='transparent'">${row}</tr>`;
   });
 
   document.getElementById('suptBulkTable').innerHTML = `
@@ -371,14 +397,14 @@ function suptRenderBulk() {
     </table>`;
 }
 
-// ─── DEPARTMAN GİRİŞ TABLOSU ────────────────────────────────────────
+// ─── DEPARTMAN GİRİŞ TABLOSU (AÇIK/NET OKUNABİLİR KUTULAR) ───────────────────
 
 function suptRenderDept(dept) {
   const ships = suptState.ships[dept] || [...SUPT_SHIPS];
   const allEntries = suptGetAllEntries();
   const allMonthKeys = suptGetExtendedMonthKeys(allEntries);
 
-  let thHtml = `<th style="background:rgba(0,0,0,0.5);color:var(--muted);padding:9px 12px;text-align:left;position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);">GEMİ</th>`;
+  let thHtml = `<th style="background:rgba(0,0,0,0.5);color:var(--muted);padding:9px 12px;text-align:left;position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);z-index:3;">GEMİ</th>`;
   allMonthKeys.forEach(mk => {
     const isPresent = mk === new Date().toISOString().slice(0,7);
     thHtml += `<th style="background:rgba(0,0,0,0.5);color:${isPresent?'var(--gold)':'var(--muted)'};padding:9px 8px;text-align:center;min-width:160px;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.2);${isPresent?'border-bottom:2px solid var(--gold);':''}">${suptMonthLabel(mk)}</th>`;
@@ -386,7 +412,7 @@ function suptRenderDept(dept) {
 
   let tbodyHtml = '';
   ships.forEach(ship => {
-    let row = `<td style="padding:8px 12px;font-weight:700;font-size:13px;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:1;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05);">${ship}</td>`;
+    let row = `<td style="padding:8px 12px;font-weight:700;font-size:13px;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:2;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05); text-align:left;">${ship}</td>`;
     allMonthKeys.forEach(mk => {
       const rawArr = suptState.entries[dept]?.[ship]?.[mk];
       const entries = Array.isArray(rawArr) ? rawArr : Object.values(rawArr || {});
@@ -395,22 +421,25 @@ function suptRenderDept(dept) {
       entries.forEach((e, idx) => {
         if(!e) return;
         const stStyle = SUPT_STATUS_CLS[e.status] || {};
-        const stHtml = e.status ? `<span style="display:inline-block;background:rgba(255,255,255,0.05);color:${stStyle.color||'#ccc'};border:1px solid ${stStyle.border||'#ccc'};border-radius:4px;font-size:10px;padding:2px 6px;font-weight:700;margin-top:6px;">${e.status}</span>` : '';
+        // Durum rozeti görünürlüğü artırıldı
+        const stHtml = e.status && e.status !== '-' ? `<span style="display:inline-block;background:${stStyle.bg};color:${stStyle.color};border:1px solid ${stStyle.border};border-radius:4px;font-size:10px;padding:2px 6px;font-weight:700;margin-top:6px;letter-spacing:0.3px;">${e.status}</span>` : '';
+        
         cellInner += `
-          <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;margin-bottom:6px;position:relative;text-align:left;">
-            <div style="font-weight:700;color:var(--text);font-size:13px;">${e.name}</div>
-            <div style="color:var(--muted);font-family:'DM Mono';font-size:11px;margin-bottom:2px;margin-top:4px;">${suptFmtDate(e.start)} → ${suptFmtDate(e.end)}</div>
+          <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(0,216,200,0.2);border-radius:8px;padding:8px 10px;margin-bottom:6px;position:relative;text-align:left;box-shadow:0 3px 6px rgba(0,0,0,0.2);">
+            <div style="font-weight:700;color:#ffffff;font-size:13px;letter-spacing:0.3px;">${e.name}</div>
+            <div style="color:rgba(150,210,200,0.8);font-family:'DM Mono';font-size:11px;margin-bottom:2px;margin-top:4px;">${suptFmtDate(e.start)} → ${suptFmtDate(e.end)}</div>
             ${stHtml}
-            <span style="background:var(--teal);color:#000;border-radius:4px;padding:2px 6px;font-size:11px;font-weight:800;position:absolute;top:6px;right:6px;">${e.days}g</span>
-            <span onclick="event.stopPropagation();suptDeleteEntry('${dept}','${ship}','${mk}',${idx})" style="position:absolute;bottom:6px;right:6px;font-size:12px;color:var(--bad);cursor:pointer;" title="Sil">✕</span>
+            <span style="background:var(--teal);color:#000;border-radius:4px;padding:2px 6px;font-size:11px;font-weight:800;position:absolute;top:6px;right:6px;box-shadow:0 0 4px var(--teal);">${e.days}g</span>
+            <span onclick="event.stopPropagation();suptDeleteEntry('${dept}','${ship}','${mk}',${idx})" style="position:absolute;bottom:6px;right:6px;font-size:12px;color:var(--bad);cursor:pointer;font-weight:bold;padding:2px 4px;" title="Sil">✕</span>
           </div>`;
       });
-      const isFuture = mk >= new Date().toISOString().slice(0,7);
-      const cellBg = isFuture && mk > new Date().toISOString().slice(0,7) ? 'rgba(0,0,0,0.2)' : (entries.length ? 'rgba(0,216,200,0.03)' : 'transparent');
       
-      row += `<td onclick="suptOpenModal('${dept}','${ship}','${mk}')" style="min-height:56px;padding:6px;cursor:pointer;vertical-align:top;border-bottom:1px solid rgba(0,216,200,0.05);border-right:1px solid rgba(0,216,200,0.05);background:${cellBg};transition:background .2s;" onmouseover="this.style.background='rgba(0,216,200,0.1)'" onmouseout="this.style.background='${cellBg}'">
+      const isFuture = mk >= new Date().toISOString().slice(0,7);
+      const cellBg = isFuture && mk > new Date().toISOString().slice(0,7) ? 'rgba(0,0,0,0.25)' : (entries.length ? 'rgba(0,216,200,0.03)' : 'transparent');
+      
+      row += `<td onclick="suptOpenModal('${dept}','${ship}','${mk}')" style="min-height:56px;padding:6px;cursor:pointer;vertical-align:top;border-bottom:1px solid rgba(0,216,200,0.05);border-right:1px solid rgba(0,216,200,0.05);background:${cellBg};transition:background .2s;" onmouseover="this.style.background='rgba(0,216,200,0.08)'" onmouseout="this.style.background='${cellBg}'">
         ${cellInner}
-        <div style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:22px;height:24px;margin-top:4px;transition:color 0.2s;" onmouseover="this.style.color='var(--teal)'" onmouseout="this.style.color='rgba(255,255,255,0.15)'">+</div>
+        <div style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.12);font-size:22px;height:24px;margin-top:4px;transition:color 0.2s;" onmouseover="this.style.color='var(--teal)'" onmouseout="this.style.color='rgba(255,255,255,0.12)'">+</div>
       </td>`;
     });
     tbodyHtml += `<tr>${row}</tr>`;
@@ -429,7 +458,7 @@ function suptRenderDept(dept) {
   }
 }
 
-// ─── ENTRY MODAL ─────────────────────────────────────────
+// ─── MODAL KONTROLLERİ ───────────────────────────────────────────────
 
 function suptOpenModal(dept, ship, monthKey) {
   suptModalCtx = { dept, ship, monthKey };
@@ -535,7 +564,7 @@ function suptDeleteEntry(dept, ship, monthKey, idx) {
   suptRenderCurrentTab();
 }
 
-// ─── İLK YÜKLEME ────────────────────────────────────────────────────
+// ─── BAŞLANGIÇ ──────────────────────────────────────────────────────
 
 function initSuperintendent() {
   document.querySelectorAll('#superintendentPanel .supt-tab').forEach(btn => {
