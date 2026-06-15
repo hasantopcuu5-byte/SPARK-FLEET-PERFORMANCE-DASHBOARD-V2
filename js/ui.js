@@ -103,7 +103,7 @@ function navSwitch(page){
       }
     }
     }
-  }
+  
 
   // ══════════════════════
 //  ADMİN MODAL
