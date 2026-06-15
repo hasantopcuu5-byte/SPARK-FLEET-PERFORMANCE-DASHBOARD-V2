@@ -170,14 +170,37 @@ async function suptSaveToFirebase() {
 
 // ─── SEKME YÖNETİMİ ─────────────────────────────────────────────────
 
+// ─── SEKME YÖNETİMİ VE GLASSMORPHISM ─────────────────────────────────────────
+
 function suptTabSwitch(panelId) {
   suptCurrentTab = panelId;
+  
+  // Butonların aktiflik durumunu ve renklerini ayarla
   document.querySelectorAll('#superintendentPanel .supt-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.panel === panelId);
+    const isActive = t.dataset.panel === panelId;
+    t.classList.toggle('active', isActive);
+    
+    // Inline stilleri zorla eziyoruz
+    if (isActive) {
+       t.style.background = 'rgba(0, 216, 200, 0.15)';
+       t.style.color = 'var(--teal)';
+    } else {
+       t.style.background = 'transparent';
+       t.style.color = 'var(--muted)';
+    }
   });
+  
+  // PANELLERİN GÖRÜNÜRLÜĞÜNÜ ZORLA DEĞİŞTİR (Hatanın Çözümü)
   document.querySelectorAll('#superintendentPanel .supt-panel').forEach(p => {
-    p.classList.toggle('active', p.id === panelId);
+    if (p.id === panelId) {
+      p.style.display = 'block';
+      p.classList.add('active');
+    } else {
+      p.style.display = 'none';
+      p.classList.remove('active');
+    }
   });
+  
   suptRenderCurrentTab();
 }
 
@@ -190,6 +213,27 @@ function suptRenderCurrentTab() {
     case 'p-tek':     suptRenderDept('tek');  break;
     case 'p-hseq':    suptRenderDept('hseq'); break;
   }
+  
+  // TÜM TABLOLARA MAT GLASSMORPHISM UYGULA
+  setTimeout(() => {
+      document.querySelectorAll('#superintendentPanel table').forEach(tbl => {
+          let wrapper = tbl.parentElement;
+          if(wrapper) {
+              wrapper.style.background = 'rgba(14, 32, 36, 0.75)'; // Mat Cam Efekti
+              wrapper.style.backdropFilter = 'blur(16px)';
+              wrapper.style.WebkitBackdropFilter = 'blur(16px)';
+              wrapper.style.border = '1px solid rgba(0, 216, 200, 0.15)';
+              wrapper.style.borderRadius = '12px';
+              wrapper.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+          }
+          // Tablo başlık satırını uyumlu şeffaf siyah yap
+          let theadTr = tbl.querySelector('thead tr');
+          if (theadTr) {
+              theadTr.style.background = 'rgba(0, 0, 0, 0.4)';
+              theadTr.style.color = 'var(--muted)';
+          }
+      });
+  }, 50);
 }
 
 // ─── GENEL ÖZET ─────────────────────────────────────────────────────
@@ -204,7 +248,6 @@ function suptRenderToplam() {
   document.getElementById('suptCardDays').textContent   = totalDays;
   document.getElementById('suptCardPeople').textContent = uniqueNames;
 
-  // Tablo — aylara göre grupla
   const byMonth = {};
   allEntries.forEach(e => {
     if (!byMonth[e.monthKey]) byMonth[e.monthKey] = [];
@@ -214,24 +257,25 @@ function suptRenderToplam() {
   const sortedKeys = Object.keys(byMonth).sort().reverse();
   let html = '';
   sortedKeys.forEach(mk => {
-    html += `<tr><td colspan="7" style="background:#2c4a6e;color:#fff;font-weight:700;font-size:12px;letter-spacing:1px;padding:8px 12px;">▼ ${suptMonthLabel(mk)}</td></tr>`;
+    // Ayırıcı Başlık (Temaya uygun Teal renginde)
+    html += `<tr><td colspan="7" style="background:rgba(0, 216, 200, 0.1);color:var(--teal);border-bottom:1px solid rgba(0,216,200,0.2);font-weight:700;font-size:12px;letter-spacing:1px;padding:8px 12px;">▼ ${suptMonthLabel(mk)}</td></tr>`;
     byMonth[mk].forEach(e => {
       const dCls = SUPT_DEPT_COLOR[e.dept] || '#888';
       const dLabel = SUPT_DEPT_LABEL[e.dept] || e.dept;
-      html += `<tr>
+      html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);">
         <td style="padding:8px 12px;">${suptMonthLabel(mk)}</td>
         <td style="padding:8px 12px;">${e.name}</td>
-        <td style="padding:8px 12px;font-weight:700;">${e.ship}</td>
+        <td style="padding:8px 12px;font-weight:700;color:var(--teal);">${e.ship}</td>
         <td style="padding:8px 12px;">
-          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dCls};margin-right:5px;"></span>${dLabel}
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dCls};margin-right:5px;box-shadow:0 0 5px ${dCls};"></span>${dLabel}
         </td>
-        <td style="padding:8px 12px;font-weight:600;">${e.days}</td>
-        <td style="padding:8px 12px;">${suptFmtDate(e.start)}</td>
-        <td style="padding:8px 12px;">${suptFmtDate(e.end)}</td>
+        <td style="padding:8px 12px;font-weight:700;color:var(--warn);">${e.days}</td>
+        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px;">${suptFmtDate(e.start)}</td>
+        <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px;">${suptFmtDate(e.end)}</td>
       </tr>`;
     });
   });
-  document.getElementById('suptToplamBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#6b8aaa;">Henüz kayıt yok.</td></tr>';
+  document.getElementById('suptToplamBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
 }
 
 // ─── ÇALIŞAN BAZLI ──────────────────────────────────────────────────
@@ -250,16 +294,16 @@ function suptRenderCalisan() {
   const sorted = Object.entries(byPerson).sort((a,b) => b[1].days - a[1].days);
   let html = '';
   sorted.forEach(([name, d]) => {
-    const deptBadges = [...d.depts].map(dep => `<span style="background:${SUPT_DEPT_BG[dep]};color:${SUPT_DEPT_COLOR[dep]};padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;margin-right:3px;">${SUPT_DEPT_LABEL[dep]}</span>`).join('');
-    html += `<tr>
+    const deptBadges = [...d.depts].map(dep => `<span style="background:rgba(255,255,255,0.05);color:${SUPT_DEPT_COLOR[dep]};border:1px solid ${SUPT_DEPT_COLOR[dep]};padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;margin-right:3px;">${SUPT_DEPT_LABEL[dep]}</span>`).join('');
+    html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);">
       <td style="padding:9px 12px;font-weight:700;">${name}</td>
       <td style="padding:9px 12px;">${deptBadges}</td>
-      <td style="padding:9px 12px;font-weight:700;color:#1a7a4a;">${d.days}</td>
+      <td style="padding:9px 12px;font-weight:900;color:var(--ok);">${d.days}</td>
       <td style="padding:9px 12px;">${d.visits}</td>
-      <td style="padding:9px 12px;">${[...d.ships].join(', ')}</td>
+      <td style="padding:9px 12px;color:var(--muted);">${[...d.ships].join(', ')}</td>
     </tr>`;
   });
-  document.getElementById('suptCalisanBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#6b8aaa;">Henüz kayıt yok.</td></tr>';
+  document.getElementById('suptCalisanBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
 }
 
 // ─── ZİYARET TABLOSU (BULK OVERVIEW) ────────────────────────────────
@@ -269,28 +313,26 @@ function suptRenderBulk() {
   const allMonths = [...new Set(allEntries.map(e => e.monthKey))].sort();
   const allShips  = suptGetAllShips();
 
-  // Başlık: Ay sütunları
-  let thHtml = '<th style="text-align:left;padding:10px;background:#0d1b2a;color:#fff;position:sticky;left:0;min-width:130px;">GEMİ</th>';
+  let thHtml = '<th style="text-align:left;padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);">GEMİ</th>';
   allMonths.forEach(mk => {
-    thHtml += `<th style="padding:10px;background:#0d1b2a;color:#fff;text-align:center;white-space:nowrap;">${suptMonthLabel(mk)}</th>`;
+    thHtml += `<th style="padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);text-align:center;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.2);">${suptMonthLabel(mk)}</th>`;
   });
 
   let tbodyHtml = '';
   allShips.forEach(ship => {
-    let row = `<td style="padding:7px 10px;font-weight:700;background:#f0f4f8;position:sticky;left:0;border-right:2px solid #c8d8ea;">${ship}</td>`;
+    let row = `<td style="padding:7px 10px;font-weight:700;background:rgba(14,32,36,0.9);color:var(--text);position:sticky;left:0;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05);">${ship}</td>`;
     allMonths.forEach(mk => {
       let chips = '';
       SUPT_DEPTS.forEach(dept => {
         const entries = (suptState.entries[dept]?.[ship]?.[mk] || []);
         entries.forEach(e => {
           const col = SUPT_DEPT_COLOR[dept];
-          const bg  = SUPT_DEPT_BG[dept];
-          chips += `<span style="display:inline-block;background:${bg};color:${col};padding:2px 5px;border-radius:3px;font-size:10px;font-weight:700;margin:1px;">${e.name.split('.')[0]}.${e.name.split('.')[1]||''} (${e.days}g)</span>`;
+          chips += `<span style="display:inline-block;background:rgba(255,255,255,0.05);color:${col};border:1px solid ${col};padding:2px 5px;border-radius:4px;font-size:10px;font-weight:700;margin:2px;">${e.name.split('.')[0]}.${e.name.split('.')[1]||''} (${e.days}g)</span>`;
         });
       });
-      row += `<td style="padding:6px 8px;text-align:center;border-bottom:1px solid #e8f0f8;vertical-align:top;">${chips || '<span style="color:#ccc;font-size:11px;">—</span>'}</td>`;
+      row += `<td style="padding:6px 8px;text-align:center;border-bottom:1px solid rgba(0,216,200,0.05);vertical-align:middle;">${chips || '<span style="color:rgba(255,255,255,0.1);font-size:11px;">—</span>'}</td>`;
     });
-    tbodyHtml += `<tr>${row}</tr>`;
+    tbodyHtml += `<tr style="transition:background 0.2s;" onmouseover="this.style.background='rgba(0,216,200,0.05)'" onmouseout="this.style.background='transparent'">${row}</tr>`;
   });
 
   document.getElementById('suptBulkTable').innerHTML = `
@@ -305,19 +347,55 @@ function suptRenderBulk() {
 function suptRenderDept(dept) {
   const ships = suptState.ships[dept] || [...SUPT_SHIPS];
   const allEntries = suptGetAllEntries();
-
-  // Tüm ay keylerini bul — geçmiş + aktif ay + 3 ay ilerisi
   const allMonthKeys = suptGetExtendedMonthKeys(allEntries);
 
-  const dColor = SUPT_DEPT_COLOR[dept];
-  const dBg    = SUPT_DEPT_BG[dept];
-
-  // Başlık
-  let thHtml = `<th style="background:#0d1b2a;color:#fff;padding:9px 12px;text-align:left;position:sticky;left:0;min-width:130px;">GEMİ</th>`;
+  let thHtml = `<th style="background:rgba(0,0,0,0.5);color:var(--muted);padding:9px 12px;text-align:left;position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);">GEMİ</th>`;
   allMonthKeys.forEach(mk => {
     const isPresent = mk === new Date().toISOString().slice(0,7);
-    thHtml += `<th style="background:#0d1b2a;color:${isPresent?'#e8a020':'#fff'};padding:9px 8px;text-align:center;min-width:160px;white-space:nowrap;${isPresent?'border-bottom:2px solid #e8a020;':''}">${suptMonthLabel(mk)}</th>`;
+    thHtml += `<th style="background:rgba(0,0,0,0.5);color:${isPresent?'var(--gold)':'var(--muted)'};padding:9px 8px;text-align:center;min-width:160px;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.2);${isPresent?'border-bottom:2px solid var(--gold);':''}">${suptMonthLabel(mk)}</th>`;
   });
+
+  let tbodyHtml = '';
+  ships.forEach(ship => {
+    let row = `<td style="padding:8px 12px;font-weight:700;font-size:13px;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:1;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05);">${ship}</td>`;
+    allMonthKeys.forEach(mk => {
+      const entries = suptState.entries[dept]?.[ship]?.[mk] || [];
+      let cellInner = '';
+      entries.forEach((e, idx) => {
+        const stStyle = SUPT_STATUS_CLS[e.status] || {};
+        const stHtml = e.status ? `<span style="display:inline-block;background:rgba(255,255,255,0.05);color:${stStyle.color||'#ccc'};border:1px solid ${stStyle.border||'#ccc'};border-radius:4px;font-size:10px;padding:2px 6px;font-weight:700;margin-top:6px;">${e.status}</span>` : '';
+        cellInner += `
+          <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;margin-bottom:6px;position:relative;text-align:left;">
+            <div style="font-weight:700;color:var(--text);font-size:13px;">${e.name}</div>
+            <div style="color:var(--muted);font-family:'DM Mono';font-size:11px;margin-bottom:2px;margin-top:4px;">${suptFmtDate(e.start)} → ${suptFmtDate(e.end)}</div>
+            ${stHtml}
+            <span style="background:var(--teal);color:#000;border-radius:4px;padding:2px 6px;font-size:11px;font-weight:800;position:absolute;top:6px;right:6px;">${e.days}g</span>
+            <span onclick="suptDeleteEntry('${dept}','${ship}','${mk}',${idx})" style="position:absolute;bottom:6px;right:6px;font-size:12px;color:var(--bad);cursor:pointer;" title="Sil">✕</span>
+          </div>`;
+      });
+      const isFuture = mk >= new Date().toISOString().slice(0,7);
+      const cellBg = isFuture && mk > new Date().toISOString().slice(0,7) ? 'rgba(0,0,0,0.2)' : (entries.length ? 'rgba(0,216,200,0.03)' : 'transparent');
+      
+      row += `<td onclick="suptOpenModal('${dept}','${ship}','${mk}')" style="min-height:56px;padding:6px;cursor:pointer;vertical-align:top;border-bottom:1px solid rgba(0,216,200,0.05);border-right:1px solid rgba(0,216,200,0.05);background:${cellBg};transition:background .2s;" onmouseover="this.style.background='rgba(0,216,200,0.1)'" onmouseout="this.style.background='${cellBg}'">
+        ${cellInner}
+        <div style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:22px;height:24px;margin-top:4px;transition:color 0.2s;" onmouseover="this.style.color='var(--teal)'" onmouseout="this.style.color='rgba(255,255,255,0.15)'">+</div>
+      </td>`;
+    });
+    tbodyHtml += `<tr>${row}</tr>`;
+  });
+
+  const containerId = `suptDeptTable_${dept}`;
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.innerHTML = `
+      <div style="overflow:auto;border-radius:6px;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead><tr>${thHtml}</tr></thead>
+          <tbody>${tbodyHtml}</tbody>
+        </table>
+      </div>`;
+  }
+}
 
   // Satırlar
   let tbodyHtml = '';
