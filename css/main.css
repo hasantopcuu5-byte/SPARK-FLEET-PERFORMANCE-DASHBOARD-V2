@@ -1516,3 +1516,49 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #superintendentPanel table td div[style*="position:relative;text-align:left"] div {
     color: #ffffff !important; /* İsimleri net beyaz yapar */
 }
+/* =================================================================═
+   SUPERINTENDENT TABLOLARI VE TÜM ALT SEKMELERİ KOYULAŞTIRMA KODLARI
+   ================================================================== */
+
+/* 1. Tüm Alt Sekmelerdeki Tablo Kapsayıcılarını (Wrapper Div) Koyu Yap */
+#superintendentPanel .supt-panel > div[style*="overflow:auto"],
+#suptBulkTable,
+#suptDeptTable_op > div,
+#suptDeptTable_tek > div,
+#suptDeptTable_hseq > div {
+    background: var(--glass) !important; /* Orijinal koyu lacivert/gece mavisi tonu */
+    border: 1px solid var(--border2) !important; /* Şık ince turkuaz çerçeve çizgisi */
+    border-radius: 16px !important;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    padding: 12px !important;
+}
+
+/* 2. Tablo Başlık Alanlarının (Thead) Arka Plan Karartması */
+#superintendentPanel table thead tr {
+    background: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* 3. Hücrelerin Şeffaflaştırılması (Altındaki Koyu Cam Efektinin Görünmesi İçin) */
+#superintendentPanel table td {
+    background-color: transparent !important;
+    color: var(--text) !important;
+    border-bottom: 1px solid rgba(0, 216, 200, 0.08) !important;
+}
+
+/* 4. Sol Tarafta Sabit Durup Kaydırılan Gemi Sütununun Arka Plan Çakışma Filtresi */
+#superintendentPanel table td[style*="position:sticky"] {
+    background: rgba(14, 32, 36, 0.98) !important; /* Kayarken arkadaki yazıları kusursuz gizlemesi için */
+    color: var(--text) !important;
+    border-right: 1px solid rgba(0, 216, 200, 0.15) !important;
+}
+
+/* 5. Ofiste Kalan Enspektör Satırı ve Genel Yazı Renk Düzeltmeleri */
+#superintendentPanel table tr[style*="background:rgba(0,216,200,0.03)"] {
+    background: rgba(0, 216, 200, 0.05) !important;
+}
+#superintendentPanel table th {
+    color: var(--text) !important;
+    font-weight: 600 !important;
+}
