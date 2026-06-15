@@ -1518,9 +1518,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 /* =================================================================═
    SUPERINTENDENT TABLOLARI VE TÜM ALT SEKMELERİ KOYULAŞTIRMA KODLARI
+   (SCROLLBAR HER ZAMAN SABİT VE GÖRÜNÜR SÜRÜM)
    ================================================================== */
 
-/* 1. Tüm Alt Sekmelerdeki Tablo Kapsayıcılarını (Wrapper Div) Koyu Yap */
+/* 1. Tüm Alt Sekmelerdeki Tablo Kapsayıcılarını Koyu Yap ve Scrollbar'ı Sabitle */
 #superintendentPanel .supt-panel > div[style*="overflow:auto"],
 #suptBulkTable,
 #suptDeptTable_op > div,
@@ -1533,6 +1534,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     backdrop-filter: blur(24px) !important;
     -webkit-backdrop-filter: blur(24px) !important;
     padding: 12px !important;
+    
+    /* YENİ EKLENEN SABİTLEME AYARLARI: Scrollbar artık alta inmeden hep ekranda görünür */
+    max-height: calc(100vh - 280px) !important; /* Ekran yüksekliğine göre dikey sınır koyar */
+    overflow: auto !important; /* Hem yatay hem dikey kaydırmayı bu kutunun içine hapseder */
+}
+
+/* Apple Tarzı İnce Modern Scrollbar Tasarımı (Yanal Çubuğun Hep Görünmesi İçin) */
+#superintendentPanel .supt-panel > div::-webkit-scrollbar,
+#suptBulkTable::-webkit-scrollbar,
+#suptDeptTable_op > div::-webkit-scrollbar,
+#suptDeptTable_tek > div::-webkit-scrollbar,
+#suptDeptTable_hseq > div::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+#superintendentPanel .supt-panel > div::-webkit-scrollbar-thumb,
+#suptBulkTable::-webkit-scrollbar-thumb,
+#suptDeptTable_op > div::-webkit-scrollbar-thumb,
+#suptDeptTable_tek > div::-webkit-scrollbar-thumb,
+#suptDeptTable_hseq > div::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 216, 200, 0.35) !important;
+    border-radius: 10px !important;
 }
 
 /* 2. Tablo Başlık Alanlarının (Thead) Arka Plan Karartması */
@@ -1540,14 +1563,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: rgba(0, 0, 0, 0.45) !important;
 }
 
-/* 3. Hücrelerin Şeffaflaştırılması (Altındaki Koyu Cam Efektinin Görünmesi İçin) */
+/* 3. Hücrelerin Şeffaflaştırılması (Alttaki Koyu Cam Efektinin Görünmesi İçin) */
 #superintendentPanel table td {
     background-color: transparent !important;
     color: var(--text) !important;
     border-bottom: 1px solid rgba(0, 216, 200, 0.08) !important;
 }
 
-/* 4. Sol Tarafta Sabit Durup Kaydırılan Gemi Sütununun Arka Plan Çakışma Filtresi */
+/* 4. Sol Tarafta Sabit Durup Kaydırılan Gemi Sütununun Arka Plan Filtresi */
 #superintendentPanel table td[style*="position:sticky"] {
     background: rgba(14, 32, 36, 0.98) !important; /* Kayarken arkadaki yazıları kusursuz gizlemesi için */
     color: var(--text) !important;
