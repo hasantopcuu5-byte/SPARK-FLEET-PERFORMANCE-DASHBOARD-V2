@@ -768,48 +768,30 @@ Fleet Overdue Job Statics
 ═══════════════════════════════════════════════════════════════════ -->
 <div id="superintendentPanel" style="display:none; position:relative; z-index:2; padding:2.5rem 2rem 3rem; padding-left:calc(64px + 2.2rem); max-width:1400px; margin:0 auto;">
 
-
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    
-    <div style="display:flex;gap:2px;background:rgba(0,0,0,0.3);border-radius:8px;padding:4px;overflow-x:auto;flex-wrap:nowrap;">
-      <button class="supt-tab active" data-panel="p-toplam" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:rgba(0,216,200,0.15);color:var(--teal);white-space:nowrap;">📊 Genel Özet</button>
-      <button class="supt-tab" data-panel="p-calisan" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">👤 Çalışan Bazlı</button>
-      <button class="supt-tab" data-panel="p-bulk" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">📋 Ziyaret Tablosu</button>
-      <button class="supt-tab" data-panel="p-op" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7ab3e8;white-space:nowrap;">● Bulk Operasyon</button>
-      <button class="supt-tab" data-panel="p-tek" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7abf8a;white-space:nowrap;">● Bulk Teknik</button>
-      <button class="supt-tab" data-panel="p-hseq" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#c49de0;white-space:nowrap;">● Bulk HSEQ</button>
+  <!-- BAŞLIK VE LOGO KISMI -->
+  <div class="perf-header" style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,216,200,0.1);">
+    <div class="perf-header-left">
+      <h2 style="margin: 0; padding: 0; font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px;">
+        Superintendent Gemi Ziyaret Özeti
+      </h2>
+      <p style="margin-top: 6px; color: var(--muted); font-size: 0.85rem; font-family:'DM Mono', monospace;">Departman Bazlı Gemi Ziyaret Takip Sistemi</p>
+      
+      <!-- LOGO SOLDA -->
+      <img src="assets/images/spark_logo2.jpg" alt="Spark Shipmanagement" style="display: block; width: 280px; height: auto; object-fit: contain; mix-blend-mode: screen; margin-top: 15px;">
     </div>
+  </div>
 
-    <img src="assets/images/spark_logo2.jpg" alt="Spark Shipmanagement" style="display: block; width: 320px; height: 80px; object-fit: contain; object-position: right; mix-blend-mode: screen; opacity: 1.0; margin-right: 15px;">
-    
+  <!-- TEKİL SEKME BUTONLARI -->
+  <div style="display:flex;gap:2px;background:rgba(0,0,0,0.3);border-radius:8px;padding:4px;margin-bottom:1.5rem;overflow-x:auto;flex-wrap:nowrap;width:fit-content;">
+    <button class="supt-tab active" data-panel="p-toplam" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:rgba(0,216,200,0.15);color:var(--teal);white-space:nowrap;">📊 Genel Özet</button>
+    <button class="supt-tab" data-panel="p-calisan" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">👤 Çalışan Bazlı</button>
+    <button class="supt-tab" data-panel="p-bulk" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">📋 Ziyaret Tablosu</button>
+    <button class="supt-tab" data-panel="p-op" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7ab3e8;white-space:nowrap;">● Bulk Operasyon</button>
+    <button class="supt-tab" data-panel="p-tek" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7abf8a;white-space:nowrap;">● Bulk Teknik</button>
+    <button class="supt-tab" data-panel="p-hseq" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#c49de0;white-space:nowrap;">● Bulk HSEQ</button>
   </div>
-  <!-- Sekmeler -->
-  <div style="display:flex;gap:2px;background:rgba(0,0,0,0.3);border-radius:8px;padding:4px;margin-bottom:1.5rem;overflow-x:auto;flex-wrap:nowrap;">
-    <button class="supt-tab active" data-panel="p-toplam"
-      style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:rgba(0,216,200,0.15);color:var(--teal);white-space:nowrap;">
-      📊 Genel Özet
-    </button>
-    <button class="supt-tab" data-panel="p-calisan"
-      style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">
-      👤 Çalışan Bazlı
-    </button>
-    <button class="supt-tab" data-panel="p-bulk"
-      style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">
-      📋 Ziyaret Tablosu
-    </button>
-    <button class="supt-tab" data-panel="p-op"
-      style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7ab3e8;white-space:nowrap;">
-      ● Bulk Operasyon
-    </button>
-    <button class="supt-tab" data-panel="p-tek"
-      style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7abf8a;white-space:nowrap;">
-      ● Bulk Teknik
-    </button>
-    <button class="supt-tab" data-panel="p-hseq"
-      style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#c49de0;white-space:nowrap;">
-      ● Bulk HSEQ
-    </button>
-  </div>
+
+  <!-- ── GENEL ÖZET ── -->
 
   <!-- ── GENEL ÖZET ── -->
  <div id="p-toplam" class="supt-panel">
@@ -986,7 +968,7 @@ Fleet Overdue Job Statics
   </div>
 
 </div>
-</div>
+
 <!-- ══ GİRİŞ MODALI ══ -->
 <div id="suptModalOverlay" style="display:none;position:fixed;inset:0;background:rgba(6,12,18,0.85);z-index:9000;align-items:center;justify-content:center;backdrop-filter:blur(8px);" onclick="if(event.target===this)suptCloseModal()">
   <div style="background:#0d1b2a;border:1px solid rgba(0,216,200,0.25);border-radius:12px;padding:28px;width:480px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:0 16px 60px rgba(0,0,0,0.6);">
