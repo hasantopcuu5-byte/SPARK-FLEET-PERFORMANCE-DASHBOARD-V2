@@ -812,11 +812,12 @@ Fleet Overdue Job Statics
   </div>
 
   <!-- ── GENEL ÖZET ── -->
+  <!-- ── GENEL ÖZET ── -->
   <div id="p-toplam" class="supt-panel">
-    
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem;">
       
-      <div style="background-color: #24292d; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+      <!-- 1. KART: TOPLAM ZİYARET (Google Rainbow Efektli) -->
+      <div style="position: relative; background: linear-gradient(#24292d, #24292d) padding-box, linear-gradient(135deg, #34a853, #4285f4, #9b72cf, #ea4335) border-box; border: 1px solid transparent; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(66, 133, 244, 0.35), 0 10px 25px rgba(234, 67, 53, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.15)';">
         <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; font-weight: 800; color: #4b8df8; text-transform: uppercase; letter-spacing: 0.5px; text-align: left;">
           📁 TOPLAM ZİYARET
         </div>
@@ -828,7 +829,8 @@ Fleet Overdue Job Statics
         </div>
       </div>
 
-      <div style="background-color: #24292d; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+      <!-- 2. KART: TOPLAM GÜN -->
+      <div style="background-color: #24292d; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(248, 75, 75, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.15)';">
         <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; font-weight: 800; color: #f84b4b; text-transform: uppercase; letter-spacing: 0.5px; text-align: left;">
           ⚠️ TOPLAM GÜN
         </div>
@@ -840,7 +842,8 @@ Fleet Overdue Job Statics
         </div>
       </div>
 
-      <div style="background-color: #24292d; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+      <!-- 3. KART: ÇALIŞAN SAYISI -->
+      <div style="background-color: #24292d; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(248, 176, 75, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.15)';">
         <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; font-weight: 800; color: #f8b04b; text-transform: uppercase; letter-spacing: 0.5px; text-align: left;">
           🌍 ÇALIŞAN SAYISI
         </div>
