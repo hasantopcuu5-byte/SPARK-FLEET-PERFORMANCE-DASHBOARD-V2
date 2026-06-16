@@ -767,17 +767,33 @@ Fleet Overdue Job Statics
      SUPERINTENDENT VISIT SUMMARY PANELİ
 ═══════════════════════════════════════════════════════════════════ -->
 
-<div class="perf-header" style="margin-bottom: 1.5rem;">
+<div class="perf-header" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(0,216,200,0.1);">
     <div class="perf-header-left">
       <div class="ph-top-label" style="margin-bottom:4px;">SPARK SHIPMANAGEMENT</div>
-      <h2 style="margin: 0; padding: 0;">Superintendent Ziyaret Özeti</h2>
-      <img src="assets/images/spark_logo2.jpg" alt="Spark Shipmanagement" style="height: 80px; margin-top: -15px; margin-left: -120px; object-fit: contain; mix-blend-mode: screen;">
-      <p style="margin-top: -10px;">Departman Bazlı Gemi Ziyaret Takip Sistemi — Firebase Bağlantılı</p>
+      <h2 style="margin: 0; padding: 0; font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px;">
+        🚢 Superintendent Ziyaret Özeti
+      </h2>
+      <p style="margin-top: 4px; color: var(--muted); font-size: 0.8rem;">Departman Bazlı Gemi Ziyaret Takip Sistemi — Firebase Bağlantılı</p>
     </div>
     <div id="suptLoadingWrap" style="display:none;align-items:center;gap:8px;color:var(--teal);font-family:'DM Mono',monospace;font-size:0.75rem;">
       <div style="width:16px;height:16px;border:2px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
       Yükleniyor...
     </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    
+    <div style="display:flex;gap:2px;background:rgba(0,0,0,0.3);border-radius:8px;padding:4px;overflow-x:auto;flex-wrap:nowrap;">
+      <button class="supt-tab active" data-panel="p-toplam" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:rgba(0,216,200,0.15);color:var(--teal);white-space:nowrap;">📊 Genel Özet</button>
+      <button class="supt-tab" data-panel="p-calisan" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">👤 Çalışan Bazlı</button>
+      <button class="supt-tab" data-panel="p-bulk" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);white-space:nowrap;">📋 Ziyaret Tablosu</button>
+      <button class="supt-tab" data-panel="p-op" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7ab3e8;white-space:nowrap;">● Bulk Operasyon</button>
+      <button class="supt-tab" data-panel="p-tek" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7abf8a;white-space:nowrap;">● Bulk Teknik</button>
+      <button class="supt-tab" data-panel="p-hseq" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#c49de0;white-space:nowrap;">● Bulk HSEQ</button>
+    </div>
+
+    <img src="assets/images/spark_logo2.jpg" alt="Spark Shipmanagement" style="display: block; width: 320px; height: 80px; object-fit: contain; object-position: right; mix-blend-mode: screen; opacity: 1.0; margin-right: 15px;">
+    
   </div>
   <!-- Sekmeler -->
   <div style="display:flex;gap:2px;background:rgba(0,0,0,0.3);border-radius:8px;padding:4px;margin-bottom:1.5rem;overflow-x:auto;flex-wrap:nowrap;">
