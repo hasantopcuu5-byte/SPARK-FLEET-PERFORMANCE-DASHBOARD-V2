@@ -258,14 +258,43 @@ function suptRenderToplam() {
   // 2. Seçili Yıla Göre Kayıtları Filtrele
   const filteredEntries = allEntries.filter(e => e.monthKey && e.monthKey.startsWith(suptCurrentYear));
 
-  // 3. En Üstteki Kartların Rakamlarını Seçili Yıla Göre Güncelle
+ // 3. En Üstteki Kartların Rakamlarını ve Başlıklarını Seçili Yıla Göre Güncelle
+  
+  // Başlıkları yıla göre dinamik yap
+  if (document.getElementById('suptCardTitleVisits')) document.getElementById('suptCardTitleVisits').innerHTML = `📁 ${suptCurrentYear} TOPLAM ZİYARET`;
+  if (document.getElementById('suptCardTitleDays')) document.getElementById('suptCardTitleDays').innerHTML = `⚠️ ${suptCurrentYear} TOPLAM GÜN SAYISI`;
+  if (document.getElementById('suptCardTitleTopShips')) document.getElementById('suptCardTitleTopShips').innerHTML = `🚢 ${suptCurrentYear} EN SIK GİDİLEN 3 GEMİ`;
+
+  // Toplam Ziyaret ve Toplam Gün
   const totalVisits = filteredEntries.length;
   const totalDays   = filteredEntries.reduce((s, e) => s + (e.days || 0), 0);
-  const uniqueNames = new Set(filteredEntries.map(e => e.name)).size;
 
   if (document.getElementById('suptCardVisits')) document.getElementById('suptCardVisits').textContent = totalVisits;
   if (document.getElementById('suptCardDays')) document.getElementById('suptCardDays').textContent   = totalDays;
-  if (document.getElementById('suptCardPeople')) document.getElementById('suptCardPeople').textContent = uniqueNames;
+
+  // En çok gidilen 3 gemiyi hesapla
+  const shipCounts = {};
+  filteredEntries.forEach(e => {
+      shipCounts[e.ship] = (shipCounts[e.ship] || 0) + 1;
+  });
+  
+  // Ziyaret sayısına göre büyükten küçüğe sırala ve ilk 3'ü al
+  const sortedShips = Object.entries(shipCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  
+  let topShipsHtml = '';
+  if(sortedShips.length > 0) {
+      topShipsHtml = sortedShips.map((s, i) => `
+          <div style="font-size:1.05rem; font-weight:800; display:flex; align-items:center; gap:6px;">
+              <span style="color:var(--teal); font-size:0.9rem;">${i+1}.</span> 
+              ${s[0]} 
+              <span style="font-size:0.75rem; color:var(--muted); font-family:'DM Mono'; margin-left:auto;">${s[1]} kez</span>
+          </div>
+      `).join('');
+  } else {
+      topShipsHtml = '<div style="font-size:1rem; color:var(--muted); font-family:\'DM Mono\';">Kayıt yok</div>';
+  }
+
+  if (document.getElementById('suptCardTopShips')) document.getElementById('suptCardTopShips').innerHTML = topShipsHtml;
 
   // 4. Tablo İçeriğini Ay Ay Grupla
   const byMonth = {};
