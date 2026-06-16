@@ -813,12 +813,40 @@ Fleet Overdue Job Statics
 
   <!-- ── GENEL ÖZET ── -->
   <div id="p-toplam" class="supt-panel">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px;">
-      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:4px solid #e8a020;border-radius:8px;padding:18px 20px;">
-        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Toplam Ziyaret</div>
-        <div id="suptCardVisits" style="font-size:28px;font-weight:800;color:#fff;font-family:'DM Mono',monospace;">—</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">tüm departmanlar</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <!-- TOPLAM ZİYARET KARTI -->
+      <div style="background:rgba(0,0,0,0.2); border:1px solid rgba(0,216,200,0.15); border-radius:12px; padding:1.2rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;text-align:center;">
+          Toplam Ziyaret
+        </div>
+        <div id="suptCardVisits" style="font-family:'Outfit',sans-serif;font-size:2.4rem;font-weight:900;color:var(--teal);line-height:1;text-shadow:0 0 15px rgba(0,216,200,0.3);">
+          —
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(150,170,165,0.6);">tüm departmanlar</div>
       </div>
+      
+      <!-- TOPLAM GÜN KARTI -->
+      <div style="background:rgba(0,0,0,0.2); border:1px solid rgba(232,184,75,0.15); border-radius:12px; padding:1.2rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;text-align:center;">
+          Toplam Gün
+        </div>
+        <div id="suptCardDays" style="font-family:'Outfit',sans-serif;font-size:2.4rem;font-weight:900;color:var(--warn);line-height:1;text-shadow:0 0 15px rgba(232,184,75,0.3);">
+          —
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(150,170,165,0.6);">tüm ziyaretler</div>
+      </div>
+      
+      <!-- ÇALIŞAN SAYISI KARTI -->
+      <div style="background:rgba(0,0,0,0.2); border:1px solid rgba(66,133,244,0.15); border-radius:12px; padding:1.2rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;text-align:center;">
+          Çalışan Sayısı
+        </div>
+        <div id="suptCardPeople" style="font-family:'Outfit',sans-serif;font-size:2.4rem;font-weight:900;color:#4285f4;line-height:1;text-shadow:0 0 15px rgba(66,133,244,0.3);">
+          —
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(150,170,165,0.6);">aktif çalışan</div>
+      </div>
+    </div>
       <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:4px solid #2e5fa3;border-radius:8px;padding:18px 20px;">
         <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Toplam Gün</div>
         <div id="suptCardDays" style="font-size:28px;font-weight:800;color:#fff;font-family:'DM Mono',monospace;">—</div>
