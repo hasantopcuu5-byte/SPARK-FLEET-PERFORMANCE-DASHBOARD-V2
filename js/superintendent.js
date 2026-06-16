@@ -388,9 +388,9 @@ function suptRenderBulk() {
     filteredMonths.push(`${suptCurrentYear}-${String(i).padStart(2, '0')}`);
   }
 
-  let thHtml = '<th style="text-align:left;padding:10px;background:rgba(10, 22, 26, 0.95);color:var(--muted);position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.25);z-index:3;">GEMİ</th>';
+  let thHtml = '<th style="text-align:left;padding:10px;background:#0d1b2a;color:var(--muted);position:sticky;top:0;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.25);z-index:10;box-shadow:0 2px 5px rgba(0,0,0,0.3);">GEMİ</th>';
   filteredMonths.forEach(mk => {
-    thHtml += `<th style="padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);text-align:center;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.25);">${suptMonthLabel(mk)}</th>`;
+    thHtml += `<th style="padding:10px;background:#0d1b2a;position:sticky;top:0;z-index:9;color:var(--muted);text-align:center;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.25);box-shadow:0 2px 5px rgba(0,0,0,0.3);">${suptMonthLabel(mk)}</th>`;
   });
 
   const totalInspectors = typeof getAllNames === 'function' ? getAllNames().length : 3;
@@ -430,10 +430,16 @@ function suptRenderBulk() {
     tbodyHtml += `<tr style="transition:background 0.2s;" onmouseover="this.style.background='rgba(0,216,200,0.03)'" onmouseout="this.style.background='transparent'">${row}</tr>`;
   });
 
-  const container = document.getElementById('suptBulkTable');
+ const container = document.getElementById('suptBulkTable');
   if (container) {
     container.innerHTML = yearTabsHtml + `
-      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <div style="overflow:auto; max-height:65vh;">
+        <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:12px;">
+          <thead><tr>${thHtml}</tr></thead>
+          <tbody>${tbodyHtml}</tbody>
+        </table>
+      </div>`;
+  }
         <thead><tr>${thHtml}</tr></thead>
         <tbody>${tbodyHtml}</tbody>
       </table>`;
@@ -471,10 +477,10 @@ function suptRenderDept(dept) {
     filteredMonths.push(`${suptCurrentYear}-${String(i).padStart(2, '0')}`);
   }
 
-  let thHtml = `<th style="background:rgba(0,0,0,0.5);color:var(--muted);padding:9px 12px;text-align:left;position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);z-index:3;">GEMİ</th>`;
+let thHtml = `<th style="background:#0d1b2a;color:var(--muted);padding:9px 12px;text-align:left;position:sticky;top:0;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);z-index:10;box-shadow:0 2px 5px rgba(0,0,0,0.3);">GEMİ</th>`;
   filteredMonths.forEach(mk => {
     const isPresent = mk === new Date().toISOString().slice(0,7);
-    thHtml += `<th style="background:rgba(0,0,0,0.5);color:${isPresent?'var(--gold)':'var(--muted)'};padding:9px 8px;text-align:center;min-width:160px;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.2);${isPresent?'border-bottom:2px solid var(--gold);':''}">${suptMonthLabel(mk)}</th>`;
+    thHtml += `<th style="position:sticky;top:0;background:#0d1b2a;z-index:9;color:${isPresent?'var(--gold)':'var(--muted)'};padding:9px 8px;text-align:center;min-width:160px;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.2);box-shadow:0 2px 5px rgba(0,0,0,0.3);${isPresent?'border-bottom:2px solid var(--gold);':''}">${suptMonthLabel(mk)}</th>`;
   });
 
   let tbodyHtml = '';
@@ -517,8 +523,8 @@ function suptRenderDept(dept) {
   const container = document.getElementById(containerId);
   if (container) {
     container.innerHTML = yearTabsHtml + `
-      <div style="overflow:auto;border-radius:6px;">
-        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <div style="overflow:auto;border-radius:6px;max-height:65vh;">
+        <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:12px;">
           <thead><tr>${thHtml}</tr></thead>
           <tbody>${tbodyHtml}</tbody>
         </table>
