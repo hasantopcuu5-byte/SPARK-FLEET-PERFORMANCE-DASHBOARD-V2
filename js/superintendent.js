@@ -359,6 +359,8 @@ function suptRenderCalisan() {
 
 // ─── ZİYARET TABLOSU (TAM YIL FİLTRELİ) ──────────────────────────────────
 
+// ─── ZİYARET TABLOSU (TAM YIL FİLTRELİ) ──────────────────────────────────
+
 function suptRenderBulk() {
   const allEntries = suptGetAllEntries();
   const allShips  = suptGetAllShips();
@@ -430,7 +432,7 @@ function suptRenderBulk() {
     tbodyHtml += `<tr style="transition:background 0.2s;" onmouseover="this.style.background='rgba(0,216,200,0.03)'" onmouseout="this.style.background='transparent'">${row}</tr>`;
   });
 
- const container = document.getElementById('suptBulkTable');
+  const container = document.getElementById('suptBulkTable');
   if (container) {
     container.innerHTML = yearTabsHtml + `
       <div style="overflow:auto; max-height:65vh;">
@@ -439,10 +441,6 @@ function suptRenderBulk() {
           <tbody>${tbodyHtml}</tbody>
         </table>
       </div>`;
-  }
-        <thead><tr>${thHtml}</tr></thead>
-        <tbody>${tbodyHtml}</tbody>
-      </table>`;
   }
 }
 
