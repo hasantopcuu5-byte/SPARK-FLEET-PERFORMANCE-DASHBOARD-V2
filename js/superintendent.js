@@ -226,32 +226,64 @@ function suptGetAllShips() {
 
 // ─── GENEL ÖZET ─────────────────────────────────────────────────────
 
+// ─── GENEL ÖZET ─────────────────────────────────────────────────────
+
 function suptRenderToplam() {
   const allEntries = suptGetAllEntries();
-  const totalVisits = allEntries.length;
-  const totalDays   = allEntries.reduce((s, e) => s + (e.days || 0), 0);
-  const uniqueNames = new Set(allEntries.map(e => e.name)).size;
+
+  // 1. Yıl Sekmeleri Oluşturma (Sadece kayıt bulunan yıllar ve mevcut yıl)
+  const yearsSet = new Set();
+  allEntries.forEach(e => { if(e.monthKey) yearsSet.add(e.monthKey.split('-')[0]); });
+  yearsSet.add(new Date().getFullYear().toString()); 
+  const years = [...yearsSet].sort();
+
+  // Aktif yıl listede yoksa en son yıla geçiş yap
+  if (!years.includes(suptCurrentYear) && years.length > 0) suptCurrentYear = years[years.length - 1];
+
+  let yearTabsHtml = '<div style="display:flex; gap:8px; align-items:center;">';
+  yearTabsHtml += '<span style="color:var(--muted); font-size:12px; font-weight:bold; margin-right:4px;">YIL:</span>';
+  years.forEach(y => {
+    const isActive = (y === suptCurrentYear);
+    const bg = isActive ? 'rgba(0, 216, 200, 0.2)' : 'rgba(255, 255, 255, 0.05)';
+    const col = isActive ? 'var(--teal)' : 'var(--muted)';
+    const border = isActive ? '1px solid var(--teal)' : '1px solid transparent';
+    yearTabsHtml += `<button onclick="suptSetYear('${y}')" style="background:${bg}; color:${col}; border:${border}; padding:4px 12px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:11px; transition:all 0.2s;">${y}</button>`;
+  });
+  yearTabsHtml += '</div>';
+
+  // Yıl sekme butonlarını HTML'e bas
+  const yearTabsContainer = document.getElementById('suptToplamYearTabs');
+  if (yearTabsContainer) yearTabsContainer.innerHTML = yearTabsHtml;
+
+  // 2. Seçili Yıla Göre Kayıtları Filtrele
+  const filteredEntries = allEntries.filter(e => e.monthKey && e.monthKey.startsWith(suptCurrentYear));
+
+  // 3. En Üstteki Kartların Rakamlarını Seçili Yıla Göre Güncelle
+  const totalVisits = filteredEntries.length;
+  const totalDays   = filteredEntries.reduce((s, e) => s + (e.days || 0), 0);
+  const uniqueNames = new Set(filteredEntries.map(e => e.name)).size;
 
   if (document.getElementById('suptCardVisits')) document.getElementById('suptCardVisits').textContent = totalVisits;
   if (document.getElementById('suptCardDays')) document.getElementById('suptCardDays').textContent   = totalDays;
   if (document.getElementById('suptCardPeople')) document.getElementById('suptCardPeople').textContent = uniqueNames;
 
+  // 4. Tablo İçeriğini Ay Ay Grupla
   const byMonth = {};
-  allEntries.forEach(e => {
+  filteredEntries.forEach(e => {
     if (!byMonth[e.monthKey]) byMonth[e.monthKey] = [];
     byMonth[e.monthKey].push(e);
   });
 
-  const sortedKeys = Object.keys(byMonth).sort().reverse();
+  const sortedKeys = Object.keys(byMonth).sort().reverse(); // En son ay en üstte çıksın
   let html = '';
   sortedKeys.forEach(mk => {
     html += `<tr><td colspan="7" style="background:rgba(0, 216, 200, 0.12);color:var(--teal);border-bottom:1px solid rgba(0,216,200,0.25);font-weight:700;font-size:12px;letter-spacing:1px;padding:8px 12px;text-align:left;">▼ ${suptMonthLabel(mk)}</td></tr>`;
     byMonth[mk].forEach(e => {
       const dCls = SUPT_DEPT_COLOR[e.dept] || '#888';
       const dLabel = SUPT_DEPT_LABEL[e.dept] || e.dept;
-      html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);">
+      html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text); transition:background 0.2s;" onmouseover="this.style.background='rgba(0,216,200,0.05)'" onmouseout="this.style.background='transparent'">
         <td style="padding:8px 12px;font-family:'DM Mono'; font-size:11px; text-align:left;">${suptMonthLabel(mk)}</td>
-        <td style="padding:8px 12px;text-align:left;">${e.name}</td>
+        <td style="padding:8px 12px;text-align:left;font-weight:600;">${e.name}</td>
         <td style="padding:8px 12px;font-weight:700;color:var(--teal);text-align:left;">${e.ship}</td>
         <td style="padding:8px 12px;text-align:left;">
           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dCls};margin-right:5px;box-shadow:0 0 5px ${dCls};"></span>${dLabel}
@@ -262,8 +294,9 @@ function suptRenderToplam() {
       </tr>`;
     });
   });
+  
   const tBody = document.getElementById('suptToplamBody');
-  if (tBody) tBody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
+  if (tBody) tBody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);font-family:\'DM Mono\';">Seçili yılda henüz kayıt yok.</td></tr>';
 }
 
 // ─── ÇALIŞAN BAZLI ──────────────────────────────────────────────────
