@@ -94,7 +94,6 @@ async function suptLoadFromFirebase() {
     if (hasData) {
       suptState.ships   = raw.ships;
       suptState.entries = raw.entries;
-      console.log("Firebase superintendent verileri yüklendi.");
     }
   } catch(e) {
     console.error('Superintendent Firebase yükleme hatası:', e);
@@ -114,7 +113,6 @@ async function suptSaveToFirebase() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(suptState)
     });
-    console.log('Superintendent verisi Firebase\'e kaydedildi.');
   } catch(e) {
     console.error('Superintendent kaydetme hatası:', e);
   } finally {
@@ -122,7 +120,7 @@ async function suptSaveToFirebase() {
   }
 }
 
-// ─── SEKME YÖNETİMİ (ZORLU DISPLAY GÜNCELLEMESİ) ──────────────────────────────
+// ─── SEKME YÖNETİMİ ──────────────────────────────
 
 // Yıl seçim fonksiyonu
 window.suptSetYear = function(year) {
@@ -146,7 +144,6 @@ function suptTabSwitch(panelId) {
     }
   });
   
-  // HTML inline style="display:none" baskınlığını tamamen ezerek görünür yapıyoruz
   document.querySelectorAll('#superintendentPanel .supt-panel').forEach(p => {
     if (p.id === panelId) {
       p.style.setProperty('display', 'block', 'important');
@@ -190,7 +187,6 @@ function suptRenderCurrentTab() {
               theadTr.style.setProperty('background', 'rgba(0, 0, 0, 0.45)', 'important');
               theadTr.style.setProperty('color', 'var(--text)', 'important');
           }
-          // İçerideki beyaz çizgileri / sütun arka planlarını sıfırla
           tbl.querySelectorAll('td').forEach(td => {
               if(!td.classList.contains('sname')) {
                   td.style.backgroundColor = 'transparent';
@@ -200,7 +196,7 @@ function suptRenderCurrentTab() {
   }, 30);
 }
 
-// ─── VERİ AYIKLAMA (GÜVENLİ KATMAN) ──────────────────────────────────────────
+// ─── VERİ AYIKLAMA ──────────────────────────────────────────
 
 function suptGetAllEntries() {
   const result = [];
@@ -218,27 +214,6 @@ function suptGetAllEntries() {
     });
   });
   return result;
-}
-
-function suptGetExtendedMonthKeys(allEntries) {
-  const existing = new Set(allEntries.map(e => e.monthKey));
-  let minKey = '2025-08'; // Eski şablon kaydı varsa diye
-  existing.forEach(k => { if (k < minKey) minKey = k; });
-
-  const now = new Date();
-  const futureEnd = new Date(now.getFullYear(), now.getMonth() + 3, 1);
-  const futureKey = `${futureEnd.getFullYear()}-${String(futureEnd.getMonth()+1).padStart(2,'0')}`;
-  const maxKey = futureKey > minKey ? futureKey : minKey;
-
-  const keys = [];
-  let [y, m] = minKey.split('-').map(Number);
-  const [ey, em] = maxKey.split('-').map(Number);
-  while (y < ey || (y === ey && m <= em)) {
-    keys.push(`${y}-${String(m).padStart(2,'0')}`);
-    m++;
-    if (m > 12) { m = 1; y++; }
-  }
-  return keys;
 }
 
 function suptGetAllShips() {
@@ -320,16 +295,19 @@ function suptRenderCalisan() {
   if (cBody) cBody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
 }
 
-// ─── ZİYARET TABLOSU (YIL FİLTRELİ) ──────────────────────────────────
+// ─── ZİYARET TABLOSU (TAM YIL FİLTRELİ) ──────────────────────────────────
 
 function suptRenderBulk() {
   const allEntries = suptGetAllEntries();
-  const allMonths = suptGetExtendedMonthKeys(allEntries);
   const allShips  = suptGetAllShips();
 
-  // Yıl Sekmeleri Oluşturma
-  const years = [...new Set(allMonths.map(k => k.split('-')[0]))].sort();
-  if (!years.includes(suptCurrentYear) && years.length > 0) suptCurrentYear = years[0];
+  // Yıl Sekmeleri Oluşturma (Sadece kayıt olan yıllar + içinde bulunduğumuz yıl)
+  const yearsSet = new Set();
+  allEntries.forEach(e => { if(e.monthKey) yearsSet.add(e.monthKey.split('-')[0]); });
+  yearsSet.add(new Date().getFullYear().toString()); 
+  const years = [...yearsSet].sort();
+
+  if (!years.includes(suptCurrentYear) && years.length > 0) suptCurrentYear = years[years.length - 1]; 
 
   let yearTabsHtml = '<div style="display:flex; gap:8px; margin-bottom:14px; align-items:center;">';
   yearTabsHtml += '<span style="color:var(--muted); font-size:12px; font-weight:bold; margin-right:8px;">YIL SEÇİMİ:</span>';
@@ -342,15 +320,17 @@ function suptRenderBulk() {
   });
   yearTabsHtml += '</div>';
 
-  // Seçilen Yıla Ait Ayları Filtrele
-  const filteredMonths = allMonths.filter(mk => mk.startsWith(suptCurrentYear));
+  // 12 AYI TAMAMEN ZORLA (Eksik ay kalmasın)
+  const filteredMonths = [];
+  for(let i=1; i<=12; i++) {
+    filteredMonths.push(`${suptCurrentYear}-${String(i).padStart(2, '0')}`);
+  }
 
   let thHtml = '<th style="text-align:left;padding:10px;background:rgba(10, 22, 26, 0.95);color:var(--muted);position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.25);z-index:3;">GEMİ</th>';
   filteredMonths.forEach(mk => {
     thHtml += `<th style="padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);text-align:center;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.25);">${suptMonthLabel(mk)}</th>`;
   });
 
-  // Üst taraftaki "Ofiste Kalan" satırı
   const totalInspectors = typeof getAllNames === 'function' ? getAllNames().length : 3;
   let tbodyHtml = `<tr style="background:rgba(0,216,200,0.03); border-bottom:1px solid rgba(0,216,200,0.15);">
     <td style="position:sticky; left:0; background:rgba(14,32,36,0.95); color:var(--warn); font-weight:700; text-align:left; z-index:2; border-right:1px solid rgba(0,216,200,0.15);">OFİSTE KALAN ENSPEKTÖR SAYISI</td>`;
@@ -368,7 +348,6 @@ function suptRenderBulk() {
   });
   tbodyHtml += '</tr>';
 
-  // Gemi satırları
   allShips.forEach(ship => {
     let row = `<td style="padding:7px 10px;font-weight:700;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:2;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05); text-align:left;">${ship}</td>`;
     filteredMonths.forEach(mk => {
@@ -399,16 +378,19 @@ function suptRenderBulk() {
   }
 }
 
-// ─── DEPARTMAN GİRİŞ TABLOSU (YIL FİLTRELİ & GEMİ İSMİ EKLİ) ───────────────────
+// ─── DEPARTMAN GİRİŞ TABLOSU (TAM YIL FİLTRELİ & GEMİ İSMİ EKLİ) ───────────────────
 
 function suptRenderDept(dept) {
   const ships = suptState.ships[dept] || [...SUPT_SHIPS];
   const allEntries = suptGetAllEntries();
-  const allMonthKeys = suptGetExtendedMonthKeys(allEntries);
 
   // Yıl Sekmeleri Oluşturma
-  const years = [...new Set(allMonthKeys.map(k => k.split('-')[0]))].sort();
-  if (!years.includes(suptCurrentYear) && years.length > 0) suptCurrentYear = years[0];
+  const yearsSet = new Set();
+  allEntries.forEach(e => { if(e.monthKey) yearsSet.add(e.monthKey.split('-')[0]); });
+  yearsSet.add(new Date().getFullYear().toString()); 
+  const years = [...yearsSet].sort();
+
+  if (!years.includes(suptCurrentYear) && years.length > 0) suptCurrentYear = years[years.length - 1];
 
   let yearTabsHtml = '<div style="display:flex; gap:8px; margin-bottom:14px; align-items:center;">';
   yearTabsHtml += '<span style="color:var(--muted); font-size:12px; font-weight:bold; margin-right:8px;">YIL SEÇİMİ:</span>';
@@ -421,8 +403,11 @@ function suptRenderDept(dept) {
   });
   yearTabsHtml += '</div>';
 
-  // Seçilen Yıla Ait Ayları Filtrele
-  const filteredMonths = allMonthKeys.filter(mk => mk.startsWith(suptCurrentYear));
+  // 12 AYI TAMAMEN ZORLA
+  const filteredMonths = [];
+  for(let i=1; i<=12; i++) {
+    filteredMonths.push(`${suptCurrentYear}-${String(i).padStart(2, '0')}`);
+  }
 
   let thHtml = `<th style="background:rgba(0,0,0,0.5);color:var(--muted);padding:9px 12px;text-align:left;position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);z-index:3;">GEMİ</th>`;
   filteredMonths.forEach(mk => {
@@ -443,7 +428,7 @@ function suptRenderDept(dept) {
         const stStyle = SUPT_STATUS_CLS[e.status] || {};
         const stHtml = e.status && e.status !== '-' ? `<span style="display:inline-block;background:${stStyle.bg};color:${stStyle.color};border:1px solid ${stStyle.border};border-radius:4px;font-size:10px;padding:2px 6px;font-weight:700;margin-top:6px;letter-spacing:0.3px;">${e.status}</span>` : '';
         
-        // İsmin altına gemi adı eklendi
+        // İSMİN ALTINA GEMİ ADI EKLENMİŞ HALİ
         cellInner += `
           <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(0,216,200,0.2);border-radius:8px;padding:8px 10px;margin-bottom:6px;position:relative;text-align:left;box-shadow:0 3px 6px rgba(0,0,0,0.2);">
             <div style="font-weight:700;color:#ffffff;font-size:13px;letter-spacing:0.3px;">${e.name}</div>
@@ -584,8 +569,6 @@ function suptDeleteEntry(dept, ship, monthKey, idx) {
   suptToast('Kayıt silindi');
   suptRenderCurrentTab();
 }
-
-// ─── BAŞLANGIÇ ──────────────────────────────────────────────────────
 
 function initSuperintendent() {
   document.querySelectorAll('#superintendentPanel .supt-tab').forEach(btn => {
