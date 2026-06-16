@@ -768,16 +768,16 @@ Fleet Overdue Job Statics
 ═══════════════════════════════════════════════════════════════════ -->
 <div id="superintendentPanel" style="display:none; position:relative; z-index:2; padding:2.5rem 2rem 3rem; padding-left:calc(64px + 2.2rem); max-width:1400px; margin:0 auto;">
 
-  <!-- BAŞLIK VE LOGO KISMI -->
+  <!-- BAŞLIK VE LOGO KISMI (RESİMDEKİ GİBİ BİREBİR) -->
   <div class="perf-header" style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,216,200,0.1);">
     <div class="perf-header-left">
-      <h2 style="margin: 0; padding: 0; font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px;">
-        Superintendent Gemi Ziyaret Özeti
-      </h2>
-      <p style="margin-top: 6px; color: var(--muted); font-size: 0.85rem; font-family:'DM Mono', monospace;">Departman Bazlı Gemi Ziyaret Takip Sistemi</p>
-      
-      <!-- LOGO SOLDA -->
-      <img src="assets/images/spark_logo2.jpg" alt="Spark Shipmanagement" style="display: block; width: 280px; height: auto; object-fit: contain; mix-blend-mode: screen; margin-top: 15px;">
+      <h2>Superintendent Gemi Ziyaret Özeti</h2>
+      <img src="assets/images/spark_logo2.jpg" alt="Spark Shipmanagement" style="height: 80px; margin-top: -15px; margin-left: -120px; object-fit: contain;">
+      <p>Departman Bazlı Gemi Ziyaret Takip Sistemi</p>
+    </div>
+    <div id="suptLoadingWrap" style="display:none;align-items:center;gap:8px;color:var(--teal);font-family:'DM Mono',monospace;font-size:0.75rem;">
+      <div style="width:16px;height:16px;border:2px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      Yükleniyor...
     </div>
   </div>
 
@@ -790,6 +790,8 @@ Fleet Overdue Job Statics
     <button class="supt-tab" data-panel="p-tek" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#7abf8a;white-space:nowrap;">● Bulk Teknik</button>
     <button class="supt-tab" data-panel="p-hseq" style="flex:0 0 auto;padding:10px 18px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;color:#c49de0;white-space:nowrap;">● Bulk HSEQ</button>
   </div>
+
+  <!-- ── GENEL ÖZET ── -->
 
   <!-- ── GENEL ÖZET ── -->
 
