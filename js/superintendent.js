@@ -33,6 +33,7 @@ let suptState = {
 };
 
 let suptCurrentTab = 'p-toplam';   
+let suptCurrentYear = new Date().getFullYear().toString(); // YIL SEÇİMİ GLOBAL DEĞİŞKENİ
 let suptModalCtx   = null;         
 let suptSaving     = false;
 
@@ -94,33 +95,6 @@ async function suptLoadFromFirebase() {
       suptState.ships   = raw.ships;
       suptState.entries = raw.entries;
       console.log("Firebase superintendent verileri yüklendi.");
-    } else {
-      console.log("Firebase boş, yerel şablon entegre ediliyor...");
-      const oldDataRaw = {"ships":{"op":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"],"tek":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"],"hseq":["GIFT","KRONOS","DREAM","FAUN","FLAT","LAKER","JUST","IDON","BEAM","CANAL","DALI","APRIL","COMET","ARES","DODO","ZEYNEP (NEW)","EMİNE (NEW)","GANI (SOLD)"]},"entries":{"op":{"GIFT":{"ARALIK":[{"name":"E.Gür","start":"2025-12-20","end":"2025-12-26","days":7,"status":"Liman"}],"NİSAN":[{"name":"E.Gür","start":"2026-04-28","end":"2026-04-30","days":3,"status":"Tersane"}],"MAYIS":[{"name":"E.Gür","start":"2026-05-01","end":"2026-05-21","days":21,"status":"Tersane"}],"AĞUSTOS":[{"name":"Y.Çağlar","start":"2025-08-06","end":"2025-08-13","days":8,"status":"Seyir"},{"name":"E.Köse","start":"2025-08-12","end":"2025-08-27","days":16,"status":"Tersane"}]},"KRONOS":{"EYLÜL":[{"name":"O.Benzet","start":"2025-09-11","end":"2025-09-29","days":19,"status":"Seyir"}]},"DREAM":{"EYLÜL":[{"name":"O.Karan","start":"2025-09-29","end":"2025-09-30","days":2,"status":"Liman"}],"NİSAN":[{"name":"O.Karan","start":"2026-04-21","end":"2026-04-24","days":4,"status":"Liman"}],"EKİM":[{"name":"O.Karan","start":"2025-10-01","end":"2025-10-01","days":1,"status":"Liman"}]},"FAUN":{"OCAK":[{"name":"O.Karan","start":"2026-01-01","end":"2026-01-19","days":19,"status":"Tersane"}],"ARALIK":[{"name":"O.Karan","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Tersane"}]},"FLAT":{"KASIM":[{"name":"O.Benzet","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Tersane"}],"ARALIK":[{"name":"O.Benzet","start":"2025-12-01","end":"2025-12-19","days":19,"status":"Tersane"}],"ŞUBAT":[{"name":"O.Benzet","start":"2026-02-10","end":"2026-02-25","days":16,"status":"Seyir"}]},"LAKER":{"KASIM":[{"name":"E.Köse","start":"2025-11-11","end":"2025-11-13","days":3}]},"JUST":{"OCAK":[{"name":"E.Köse","start":"2026-02-02","end":"2026-02-11","days":10,"status":"Demir"}],"ŞUBAT":[{"name":"O.Karan","start":"2026-02-26","end":"2026-02-28","days":3,"status":"Seyir"}],"MART":[{"name":"O.Karan","start":"2026-03-01","end":"2026-03-08","days":8,"status":"Liman"},{"name":"E.Köse","start":"2026-03-25","end":"2026-03-26","days":2,"status":"Liman"}],"NİSAN":[{"name":"O.Karan","start":"2026-04-03","end":"2026-04-03","days":1,"status":"Liman"}]},"IDON":{"HAZİRAN":[{"name":"Y.Çağlar","start":"2025-06-23","end":"2025-06-28","days":6}],"OCAK":[{"name":"E.Gür","start":"2026-01-24","end":"2026-01-31","days":8,"status":"Seyir"}],"ŞUBAT":[{"name":"E.Gür","start":"2026-02-01","end":"2026-02-13","days":13,"status":"Seyir"}]},"BEAM":{"HAZİRAN":[{"name":"O.Benzet","start":"2025-06-15","end":"2025-06-23","days":9,"status":"Seyir"}]},"CANAL":{},"DALI":{"OCAK":[{"name":"O.Benzet","start":"2026-01-20","end":"2026-01-23","days":4,"status":"Demir"}],"MART":[{"name":"E.Gür","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Liman"}]},"APRIL":{"HAZİRAN":[{"name":"O.Benzet","start":"2025-06-12","end":"2025-06-15","days":4,"status":"Seyir"}],"KASIM":[{"name":"O.Benzet","start":"2025-11-05","end":"2025-11-11","days":7,"status":"Seyir"}],"ARALIK":[{"name":"O.Benzet","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Demir"}],"OCAK":[{"name":"O.Benzet","start":"2026-01-01","end":"2026-01-16","days":16,"status":"Demir"}],"MART":[{"name":"O.Benzet","start":"2026-03-09","end":"2026-03-28","days":20,"status":"Tersane"}],"NİSAN":[{"name":"O.Benzet","start":"2026-04-01","end":"2026-04-28","days":28,"status":"Tersane"}]},"COMET":{"OCAK":[{"name":"O.Karan","start":"2026-01-19","end":"2026-01-28","days":10,"status":"Tersane"}]},"ARES":{},"DODO":{},"ZEYNEP (NEW)":{"KASIM":[{"name":"E.Köse","start":"2025-11-09","end":"2025-11-20","days":12,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"E.Köse","start":"2026-04-01","end":"2026-04-15","days":15,"status":"Tersane"}],"MART":[{"name":"E.Köse","start":"2026-03-31","end":"2026-03-31","days":1,"status":"Tersane"}],"MAYIS":[]},"GANI (SOLD)":{"AĞUSTOS":[]}},"tek":{"GIFT":{"AĞUSTOS":[{"name":"M.O.Kırmızı","start":"2025-08-12","end":"2025-08-27","days":16,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-08-14","end":"2025-08-31","days":18,"status":"Tersane"}],"EYLÜL":[{"name":"M.O.Kırmızı","start":"2025-09-23","end":"2025-09-30","days":8,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-09-01","end":"2025-09-30","days":30,"status":"Tersane"}],"EKİM":[{"name":"M.O.Kırmızı","start":"2025-10-01","end":"2025-10-01","days":1,"status":"Tersane"},{"name":"K.Gümüş","start":"2025-10-01","end":"2025-10-03","days":3,"status":"Tersane"}],"ARALIK":[{"name":"K.Gümüş","start":"2025-12-20","end":"2025-12-26","days":7,"status":"Liman"}],"MAYIS":[{"name":"Ö.B.Yıldırım","start":"2026-05-01","end":"2026-05-22","days":22}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-28","end":"2026-04-30","days":3}]},"KRONOS":{},"DREAM":{"NİSAN":[{"name":"C.Yayla","start":"2026-04-20","end":"2026-04-25","days":6,"status":"Liman"},{"name":"D.İlimsever","start":"2026-04-20","end":"2026-04-25","days":6,"status":"Liman"}]},"FAUN":{"ARALIK":[{"name":"D.İlimsever","start":"2025-12-24","end":"2025-12-31","days":8,"status":"Tersane"},{"name":"Ö.B.Yıldırım","start":"2025-12-29","end":"2025-12-31","days":3,"status":"Tersane"}],"OCAK":[{"name":"D.İlimsever","start":"2026-01-01","end":"2026-01-21","days":21,"status":"Tersane"},{"name":"Ö.B.Yıldırım","start":"2026-01-01","end":"2026-01-31","days":31,"status":"Tersane"}],"MART":[{"name":"D.İlimsever","start":"2026-03-17","end":"2026-03-28","days":12,"status":"Seyir"}]},"FLAT":{"KASIM":[{"name":"K.Gümüş","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Tersane"}],"ARALIK":[{"name":"K.Gümüş","start":"2025-12-01","end":"2025-12-19","days":19,"status":"Tersane"}],"ŞUBAT":[{"name":"K.Gümüş","start":"2026-02-13","end":"2026-02-25","days":13,"status":"Seyir"}]},"LAKER":{"TEMMUZ":[{"name":"C.Yayla","start":"2025-07-21","end":"2025-07-26","days":6,"status":"Liman"}],"KASIM":[{"name":"C.Yayla","start":"2025-11-28","end":"2025-11-30","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2025-11-20","end":"2025-11-30","days":11,"status":"Tersane"}],"ARALIK":[{"name":"C.Yayla","start":"2025-12-01","end":"2025-12-03","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2025-12-01","end":"2025-12-24","days":24,"status":"Tersane"}]},"JUST":{"EYLÜL":[{"name":"D.İlimsever","start":"2025-09-17","end":"2025-09-30","days":14,"status":"Liman"},{"name":"C.Yayla","start":"2025-09-17","end":"2025-09-30","days":14,"status":"Seyir"}],"MART":[{"name":"C.Yayla","start":"2026-03-25","end":"2026-03-27","days":3,"status":"Liman"},{"name":"Ö.B.Yıldırım","start":"2026-03-25","end":"2026-03-26","days":2,"status":"Liman"}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-02","end":"2026-04-02","days":1}]},"IDON":{"HAZİRAN":[{"name":"C.Yayla","start":"2025-06-17","end":"2025-06-21","days":5,"status":"Liman"},{"name":"K.Gümüş","start":"2025-06-17","end":"2025-06-23","days":7,"status":"Liman"}],"ŞUBAT":[{"name":"D.İlimsever","start":"2026-01-22","end":"2026-02-13","days":23,"status":"Seyir"}]},"BEAM":{"HAZİRAN":[{"name":"Ö.B.Yıldırım","start":"2025-06-17","end":"2025-06-23","days":7,"status":"Seyir"}]},"CANAL":{},"DALI":{"OCAK":[{"name":"K.Gümüş","start":"2026-01-20","end":"2026-01-23","days":4,"status":"Seyir"}],"MART":[{"name":"K.Gümüş","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Seyir"},{"name":"C.Yayla","start":"2026-03-19","end":"2026-03-23","days":5,"status":"Seyir"}]},"APRIL":{"KASIM":[{"name":"C.Yayla","start":"2025-11-05","end":"2025-11-10","days":6,"status":"Liman"}],"MART":[{"name":"M.O.Kırmızı","start":"2026-03-09","end":"2026-03-31","days":23,"status":"Tersane"}],"NİSAN":[{"name":"M.O.Kırmızı","start":"2026-04-01","end":"2026-04-30","days":30,"status":"Tersane"}],"MAYIS":[{"name":"K.Gümüş","start":"2026-05-16","end":"2026-05-26","days":11,"status":"Liman"}]},"COMET":{"OCAK":[{"name":"Ö.B.Yıldırım","start":"2026-01-01","end":"2026-01-31","days":31,"status":"Tersane"}],"NİSAN":[{"name":"Ö.B.Yıldırım","start":"2026-04-22","end":"2026-04-22","days":1,"status":"Tersane"}],"MART":[{"name":"Ö.B.Yıldırım","start":"2026-03-01","end":"2026-03-02","days":2,"status":"Tersane"}],"ŞUBAT":[{"name":"Ö.B.Yıldırım","start":"2026-02-01","end":"2026-02-28","days":28,"status":"Tersane"}]},"ARES":{"MART":[{"name":"D.İlimsever","start":"2026-03-01","end":"2026-03-11","days":11,"status":"Liman"}]},"DODO":{"TEMMUZ":[{"name":"M.O.Kırmızı","start":"2025-07-26","end":"2025-07-30","days":5,"status":"Liman"}],"AĞUSTOS":[{"name":"M.O.Kırmızı","start":"2025-08-01","end":"2025-08-02","days":2,"status":"Liman"}],"NİSAN":[{"name":"K.Gümüş","start":"2026-04-26","end":"2026-04-30","days":5,"status":"Seyir"}],"MAYIS":[{"name":"K.Gümüş","start":"2026-05-01","end":"2026-05-01","days":1,"status":"Seyir"}]},"ZEYNEP (NEW)":{"KASIM":[{"name":"M.O.Kırmızı","start":"2025-11-09","end":"2025-11-20","days":12,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"M.O.Kırmızı","start":"2026-04-05","end":"2026-04-15","days":11,"status":"Tersane"}]},"GANI (SOLD)":{}},"hseq":{"GIFT":{"HAZİRAN":[{"name":"M.B.Aktaş","start":"2025-06-02","end":"2025-06-05","days":4,"status":"Liman"}],"ŞUBAT":[{"name":"M.A.Yener","start":"2026-02-10","end":"2026-02-13","days":4,"status":"Demir"},{"name":"M.B.Aktaş","start":"2026-02-10","end":"2026-02-13","days":4,"status":"Demir"}]},"KRONOS":{"TEMMUZ":[{"name":"M.A.Yener","start":"2025-07-04","end":"2025-07-09","days":6,"status":"Liman"}]},"DREAM":{"AĞUSTOS":[{"name":"M.B.Aktaş","start":"2025-08-24","end":"2025-08-31","days":8,"status":"Liman"},{"name":"M.A.Yener","start":"2025-08-24","end":"2025-08-31","days":8,"status":"Liman"}],"ARALIK":[],"KASIM":[]},"FAUN":{},"FLAT":{"OCAK":[{"name":"M.B.Aktaş","start":"2026-01-07","end":"2026-01-10","days":4,"status":"Tersane"}]},"LAKER":{"TEMMUZ":[{"name":"M.A.Yener","start":"2025-07-21","end":"2025-07-25","days":5,"status":"Liman"},{"name":"M.B.Aktaş","start":"2025-07-21","end":"2025-07-25","days":5,"status":"Liman"}],"KASIM":[{"name":"S.İntepe","start":"2025-11-23","end":"2025-11-30","days":8}]},"JUST":{"EYLÜL":[{"name":"M.B.Aktaş","start":"2025-09-17","end":"2025-09-20","days":4,"status":"Liman"}]},"IDON":{},"BEAM":{},"CANAL":{"KASIM":[{"name":"M.A.Yener","start":"2025-11-19","end":"2025-11-30","days":12,"status":"Seyir"}],"ARALIK":[{"name":"M.A.Yener","start":"2025-12-01","end":"2025-12-12","days":12,"status":"Seyir"}]},"DALI":{},"APRIL":{"NİSAN":[{"name":"M.B.Aktaş","start":"2026-04-16","end":"2026-04-25","days":10,"status":"Tersane"},{"name":"S.İntepe","start":"2026-04-27","end":"2026-04-29","days":3}]},"COMET":{},"ARES":{},"DODO":{},"ZEYNEP (NEW)":{"OCAK":[{"name":"M.B.Aktaş","start":"2026-01-02","end":"2026-01-06","days":5,"status":"Tersane"}]},"EMİNE (NEW)":{"NİSAN":[{"name":"M.B.Aktaş","start":"2026-04-16","end":"2026-04-25","days":10,"status":"Tersane"}]},"GANI (SOLD)":{}}}};
-
-      const monthMap = {
-        "HAZİRAN": "2025-06", "TEMMUZ": "2025-07", "AĞUSTOS": "2025-08",
-        "EYLÜL": "2025-09", "EKİM": "2025-10", "KASIM": "2025-11",
-        "ARALIK": "2025-12", "OCAK": "2026-01", "ŞUBAT": "2026-02",
-        "MART": "2026-03", "NİSAN": "2026-04", "MAYIS": "2026-05"
-      };
-
-      let newEntries = { op: {}, tek: {}, hseq: {} };
-
-      ['op', 'tek', 'hseq'].forEach(dept => {
-          Object.keys(oldDataRaw.entries[dept] || {}).forEach(ship => {
-              newEntries[dept][ship] = {};
-              Object.keys(oldDataRaw.entries[dept][ship]).forEach(oldMonth => {
-                  let newMonthKey = monthMap[oldMonth] || oldMonth;
-                  newEntries[dept][ship][newMonthKey] = oldDataRaw.entries[dept][ship][oldMonth];
-              });
-          });
-      });
-
-      suptState.ships = oldDataRaw.ships;
-      suptState.entries = newEntries;
-      
-      await suptSaveToFirebase();
     }
   } catch(e) {
     console.error('Superintendent Firebase yükleme hatası:', e);
@@ -149,6 +123,12 @@ async function suptSaveToFirebase() {
 }
 
 // ─── SEKME YÖNETİMİ (ZORLU DISPLAY GÜNCELLEMESİ) ──────────────────────────────
+
+// Yıl seçim fonksiyonu
+window.suptSetYear = function(year) {
+  suptCurrentYear = year;
+  suptRenderCurrentTab();
+};
 
 function suptTabSwitch(panelId) {
   suptCurrentTab = panelId;
@@ -242,7 +222,7 @@ function suptGetAllEntries() {
 
 function suptGetExtendedMonthKeys(allEntries) {
   const existing = new Set(allEntries.map(e => e.monthKey));
-  let minKey = '2025-08';
+  let minKey = '2025-08'; // Eski şablon kaydı varsa diye
   existing.forEach(k => { if (k < minKey) minKey = k; });
 
   const now = new Date();
@@ -277,9 +257,9 @@ function suptRenderToplam() {
   const totalDays   = allEntries.reduce((s, e) => s + (e.days || 0), 0);
   const uniqueNames = new Set(allEntries.map(e => e.name)).size;
 
-  document.getElementById('suptCardVisits').textContent = totalVisits;
-  document.getElementById('suptCardDays').textContent   = totalDays;
-  document.getElementById('suptCardPeople').textContent = uniqueNames;
+  if (document.getElementById('suptCardVisits')) document.getElementById('suptCardVisits').textContent = totalVisits;
+  if (document.getElementById('suptCardDays')) document.getElementById('suptCardDays').textContent   = totalDays;
+  if (document.getElementById('suptCardPeople')) document.getElementById('suptCardPeople').textContent = uniqueNames;
 
   const byMonth = {};
   allEntries.forEach(e => {
@@ -307,7 +287,8 @@ function suptRenderToplam() {
       </tr>`;
     });
   });
-  document.getElementById('suptToplamBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
+  const tBody = document.getElementById('suptToplamBody');
+  if (tBody) tBody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
 }
 
 // ─── ÇALIŞAN BAZLI ──────────────────────────────────────────────────
@@ -335,27 +316,45 @@ function suptRenderCalisan() {
       <td style="padding:9px 12px;color:var(--muted);text-align:left;">${[...d.ships].join(', ')}</td>
     </tr>`;
   });
-  document.getElementById('suptCalisanBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
+  const cBody = document.getElementById('suptCalisanBody');
+  if (cBody) cBody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">Henüz kayıt yok.</td></tr>';
 }
 
-// ─── ZİYARET TABLOSU (ORIGINAL TASARIMA GÖRE DEPARTMAN BADGELİ HARİTA) ───
+// ─── ZİYARET TABLOSU (YIL FİLTRELİ) ──────────────────────────────────
 
 function suptRenderBulk() {
   const allEntries = suptGetAllEntries();
-  // KESİN ÇÖZÜM: Dinamik takvim zincirini diğer sekmelerle eşitliyoruz
   const allMonths = suptGetExtendedMonthKeys(allEntries);
   const allShips  = suptGetAllShips();
 
+  // Yıl Sekmeleri Oluşturma
+  const years = [...new Set(allMonths.map(k => k.split('-')[0]))].sort();
+  if (!years.includes(suptCurrentYear) && years.length > 0) suptCurrentYear = years[0];
+
+  let yearTabsHtml = '<div style="display:flex; gap:8px; margin-bottom:14px; align-items:center;">';
+  yearTabsHtml += '<span style="color:var(--muted); font-size:12px; font-weight:bold; margin-right:8px;">YIL SEÇİMİ:</span>';
+  years.forEach(y => {
+    const isActive = (y === suptCurrentYear);
+    const bg = isActive ? 'rgba(0, 216, 200, 0.2)' : 'rgba(255, 255, 255, 0.05)';
+    const col = isActive ? 'var(--teal)' : 'var(--muted)';
+    const border = isActive ? '1px solid var(--teal)' : '1px solid transparent';
+    yearTabsHtml += `<button onclick="suptSetYear('${y}')" style="background:${bg}; color:${col}; border:${border}; padding:6px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:12px; transition:all 0.2s;">${y}</button>`;
+  });
+  yearTabsHtml += '</div>';
+
+  // Seçilen Yıla Ait Ayları Filtrele
+  const filteredMonths = allMonths.filter(mk => mk.startsWith(suptCurrentYear));
+
   let thHtml = '<th style="text-align:left;padding:10px;background:rgba(10, 22, 26, 0.95);color:var(--muted);position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.25);z-index:3;">GEMİ</th>';
-  allMonths.forEach(mk => {
+  filteredMonths.forEach(mk => {
     thHtml += `<th style="padding:10px;background:rgba(0,0,0,0.5);color:var(--muted);text-align:center;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.25);">${suptMonthLabel(mk)}</th>`;
   });
 
   // Üst taraftaki "Ofiste Kalan" satırı
-  const totalInspectors = typeof getAllNames === 'function' ? getAllNames().length : 3; // Güvenli fallback
+  const totalInspectors = typeof getAllNames === 'function' ? getAllNames().length : 3;
   let tbodyHtml = `<tr style="background:rgba(0,216,200,0.03); border-bottom:1px solid rgba(0,216,200,0.15);">
     <td style="position:sticky; left:0; background:rgba(14,32,36,0.95); color:var(--warn); font-weight:700; text-align:left; z-index:2; border-right:1px solid rgba(0,216,200,0.15);">OFİSTE KALAN ENSPEKTÖR SAYISI</td>`;
-  allMonths.forEach(mk => {
+  filteredMonths.forEach(mk => {
     const namesOnShips = new Set();
     SUPT_DEPTS.forEach(dept => {
       Object.keys(suptState.entries[dept] || {}).forEach(ship => {
@@ -372,7 +371,7 @@ function suptRenderBulk() {
   // Gemi satırları
   allShips.forEach(ship => {
     let row = `<td style="padding:7px 10px;font-weight:700;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:2;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05); text-align:left;">${ship}</td>`;
-    allMonths.forEach(mk => {
+    filteredMonths.forEach(mk => {
       let chips = '';
       SUPT_DEPTS.forEach(dept => {
         const rawArr = suptState.entries[dept]?.[ship]?.[mk];
@@ -390,22 +389,43 @@ function suptRenderBulk() {
     tbodyHtml += `<tr style="transition:background 0.2s;" onmouseover="this.style.background='rgba(0,216,200,0.03)'" onmouseout="this.style.background='transparent'">${row}</tr>`;
   });
 
-  document.getElementById('suptBulkTable').innerHTML = `
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <thead><tr>${thHtml}</tr></thead>
-      <tbody>${tbodyHtml}</tbody>
-    </table>`;
+  const container = document.getElementById('suptBulkTable');
+  if (container) {
+    container.innerHTML = yearTabsHtml + `
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead><tr>${thHtml}</tr></thead>
+        <tbody>${tbodyHtml}</tbody>
+      </table>`;
+  }
 }
 
-// ─── DEPARTMAN GİRİŞ TABLOSU (AÇIK/NET OKUNABİLİR KUTULAR) ───────────────────
+// ─── DEPARTMAN GİRİŞ TABLOSU (YIL FİLTRELİ & GEMİ İSMİ EKLİ) ───────────────────
 
 function suptRenderDept(dept) {
   const ships = suptState.ships[dept] || [...SUPT_SHIPS];
   const allEntries = suptGetAllEntries();
   const allMonthKeys = suptGetExtendedMonthKeys(allEntries);
 
+  // Yıl Sekmeleri Oluşturma
+  const years = [...new Set(allMonthKeys.map(k => k.split('-')[0]))].sort();
+  if (!years.includes(suptCurrentYear) && years.length > 0) suptCurrentYear = years[0];
+
+  let yearTabsHtml = '<div style="display:flex; gap:8px; margin-bottom:14px; align-items:center;">';
+  yearTabsHtml += '<span style="color:var(--muted); font-size:12px; font-weight:bold; margin-right:8px;">YIL SEÇİMİ:</span>';
+  years.forEach(y => {
+    const isActive = (y === suptCurrentYear);
+    const bg = isActive ? 'rgba(0, 216, 200, 0.2)' : 'rgba(255, 255, 255, 0.05)';
+    const col = isActive ? 'var(--teal)' : 'var(--muted)';
+    const border = isActive ? '1px solid var(--teal)' : '1px solid transparent';
+    yearTabsHtml += `<button onclick="suptSetYear('${y}')" style="background:${bg}; color:${col}; border:${border}; padding:6px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:12px; transition:all 0.2s;">${y}</button>`;
+  });
+  yearTabsHtml += '</div>';
+
+  // Seçilen Yıla Ait Ayları Filtrele
+  const filteredMonths = allMonthKeys.filter(mk => mk.startsWith(suptCurrentYear));
+
   let thHtml = `<th style="background:rgba(0,0,0,0.5);color:var(--muted);padding:9px 12px;text-align:left;position:sticky;left:0;min-width:130px;border-bottom:1px solid rgba(0,216,200,0.2);z-index:3;">GEMİ</th>`;
-  allMonthKeys.forEach(mk => {
+  filteredMonths.forEach(mk => {
     const isPresent = mk === new Date().toISOString().slice(0,7);
     thHtml += `<th style="background:rgba(0,0,0,0.5);color:${isPresent?'var(--gold)':'var(--muted)'};padding:9px 8px;text-align:center;min-width:160px;white-space:nowrap;border-bottom:1px solid rgba(0,216,200,0.2);${isPresent?'border-bottom:2px solid var(--gold);':''}">${suptMonthLabel(mk)}</th>`;
   });
@@ -413,7 +433,7 @@ function suptRenderDept(dept) {
   let tbodyHtml = '';
   ships.forEach(ship => {
     let row = `<td style="padding:8px 12px;font-weight:700;font-size:13px;background:rgba(14,32,36,0.95);color:var(--text);position:sticky;left:0;z-index:2;border-right:1px solid rgba(0,216,200,0.15);border-bottom:1px solid rgba(0,216,200,0.05); text-align:left;">${ship}</td>`;
-    allMonthKeys.forEach(mk => {
+    filteredMonths.forEach(mk => {
       const rawArr = suptState.entries[dept]?.[ship]?.[mk];
       const entries = Array.isArray(rawArr) ? rawArr : Object.values(rawArr || {});
       
@@ -421,13 +441,14 @@ function suptRenderDept(dept) {
       entries.forEach((e, idx) => {
         if(!e) return;
         const stStyle = SUPT_STATUS_CLS[e.status] || {};
-        // Durum rozeti görünürlüğü artırıldı
         const stHtml = e.status && e.status !== '-' ? `<span style="display:inline-block;background:${stStyle.bg};color:${stStyle.color};border:1px solid ${stStyle.border};border-radius:4px;font-size:10px;padding:2px 6px;font-weight:700;margin-top:6px;letter-spacing:0.3px;">${e.status}</span>` : '';
         
+        // İsmin altına gemi adı eklendi
         cellInner += `
           <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(0,216,200,0.2);border-radius:8px;padding:8px 10px;margin-bottom:6px;position:relative;text-align:left;box-shadow:0 3px 6px rgba(0,0,0,0.2);">
             <div style="font-weight:700;color:#ffffff;font-size:13px;letter-spacing:0.3px;">${e.name}</div>
-            <div style="color:rgba(150,210,200,0.8);font-family:'DM Mono';font-size:11px;margin-bottom:2px;margin-top:4px;">${suptFmtDate(e.start)} → ${suptFmtDate(e.end)}</div>
+            <div style="font-weight:bold;color:var(--teal);font-size:11.5px;margin-top:4px;margin-bottom:2px;">🚢 ${ship}</div>
+            <div style="color:rgba(150,210,200,0.8);font-family:'DM Mono';font-size:11px;margin-bottom:2px;">${suptFmtDate(e.start)} → ${suptFmtDate(e.end)}</div>
             ${stHtml}
             <span style="background:var(--teal);color:#000;border-radius:4px;padding:2px 6px;font-size:11px;font-weight:800;position:absolute;top:6px;right:6px;box-shadow:0 0 4px var(--teal);">${e.days}g</span>
             <span onclick="event.stopPropagation();suptDeleteEntry('${dept}','${ship}','${mk}',${idx})" style="position:absolute;bottom:6px;right:6px;font-size:12px;color:var(--bad);cursor:pointer;font-weight:bold;padding:2px 4px;" title="Sil">✕</span>
@@ -448,7 +469,7 @@ function suptRenderDept(dept) {
   const containerId = `suptDeptTable_${dept}`;
   const container = document.getElementById(containerId);
   if (container) {
-    container.innerHTML = `
+    container.innerHTML = yearTabsHtml + `
       <div style="overflow:auto;border-radius:6px;">
         <table style="width:100%;border-collapse:collapse;font-size:12px;">
           <thead><tr>${thHtml}</tr></thead>
