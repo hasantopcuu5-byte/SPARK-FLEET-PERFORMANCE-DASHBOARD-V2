@@ -136,7 +136,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=DM+Mono:wght@400;500&family=Inter:wght@400;800;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/main.css">
+  <style>
+/* =================================================== */
+/* ENSPEKTÖR SLAVE (READ-ONLY) MODU KİLİT KODLARI      */
+/* =================================================== */
+
+/* 1. Hücrelere tıklanmasını (Modal açılmasını) tamamen engeller */
+td[onclick*="suptOpenModal"] {
+    pointer-events: none !important; 
+    cursor: default !important;
+}
+
+/* 2. Hücre içindeki "+" (Yeni Ekle) işaretini gizler */
+td[onclick*="suptOpenModal"] div:last-child {
+    display: none !important;
+}
+
+/* 3. Tablodaki "Sil" yazılarını/butonlarını gizler */
+span[onclick*="suptDeleteEntry"] {
+    display: none !important;
+}
+
+/* 4. Yanlışlıkla modal açılırsa diye, formunu ve sil butonlarını gizler */
+#suptModalOverlay input, 
+#suptModalOverlay select, 
+#suptModalOverlay button {
+    display: none !important;
+}
+#suptModalOverlay .opa-close,
+#suptModalOverlay button[onclick="suptCloseEditModal()"] {
+    display: block !important; 
+}
+</style>
 </head>
+
 <body>
 
 <div id="welcomeScreen">
@@ -797,21 +830,9 @@ Fleet Overdue Job Statics
 
   <!-- ── GENEL ÖZET ── -->
  <div id="p-toplam" class="supt-panel">
-    
+
     <style>
-      .psc-google-card {
-        background-color: rgba(14, 32, 36, 0.95);
-        border: 1px solid rgba(0, 216, 200, 0.15);
-        border-radius: 12px;
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 0.2rem;
-        position: relative;
-        z-index: 1;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
+ 
       
       /* Üzerine Gelince Çıkan Dönen Rainbow Efekti */
       .psc-google-card::before {
